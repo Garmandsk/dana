@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ParentInfoLalu from '../layouts/ParentInfoLalu.astro';
+import InfoTotal from '../components/InfoTotal.astro';
+import InfoLalu from '../components/InfoLalu.astro';
+import TombolEpik from '../components/TombolEpik.astro';
+---
+
+<Layout title="Dana Porseni XVII">
+  
+  <div class="mb-5" id="info">
+    <InfoTotal teksAtas="Total Pendapatan" teksBawah="100.000,00"/>
+
+    <ParentInfoLalu>
+      <InfoLalu teksAtas="Hari Lalu" teksBawah="50.000,00"/>
+      <InfoLalu teksAtas="Minggu Lalu" teksBawah="100.000,00"/>
+      <InfoLalu teksAtas="Bulan Lalu" teksBawah="150.000,00"/>
+    </ParentInfoLalu>
+  </div>
+  
+  <TombolEpik teks="Admin"/>
+  
+</Layout>

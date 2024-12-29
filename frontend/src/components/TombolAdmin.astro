@@ -1,0 +1,135 @@
+---
+const { teks } = Astro.props;
+const kataSandiBenar = "halo";
+---
+
+<!-- Button trigger modal -->
+<div id="modal-container" data-password={kataSandiBenar}>
+  <button type="button" class="btn btn-primary mt-5" id="tombolModal" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    {teks}
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Buktikan!</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input id="kataSandi" class="w-100" type="text" placeholder="Kata Sandi">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <a id="tombolMasuk" class="btn" style="color:white;" href="#" role="button">Masuk</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('tombolMasuk').addEventListener('click', () => {
+    
+    const kataSandi = document.getElementById('kataSandi').value;
+
+    const validPassword = document.getElementById('modal-container').dataset.password;
+
+    if (kataSandi) {
+      if (kataSandi === validPassword) {
+        window.location.href = '/admin';
+      } else {
+        alert('Kata sandi salah!');
+      }
+    } else {
+      alert('Kata sandi harus diisi!');
+    }
+  });
+</script>
+
+<style>
+	
+	/* 
+  Project: CSS Glowing Button
+  Created: Sunday, 06 March 2022
+  Author: Jamshid Elmi 
+  Tutorial: https://youtu.be/b_8fHNIHFk4
+  */
+
+/* button */
+.btn {
+  padding: 15px 40px;
+  border: none;
+  outline: none;
+  color: #FFF;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+}
+
+#tombolModal{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+/* glow */
+.btn::before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #FF0000, #FF7300, #FFFB00, #48FF00,
+    #00FFD5, #002BFF, #FF00C8, #FF0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 4px);
+  height:  calc(100% + 4px);
+  filter: blur(8px);
+  animation: glowing 20s linear infinite;
+  transition: opacity .3s ease-in-out;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+@keyframes glowing {
+  0% {background-position: 0 0;}
+  50% {background-position: 400% 0;}
+  100% {background-position: 0 0;}
+}
+
+/* hover */
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active:after {
+  background: transparent;
+}
+
+.btn:active {
+  color: #000;
+  font-weight: bold;
+}
+
+input{
+  padding:4px;
+  border-radius:10px;
+}
+</style>

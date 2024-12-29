@@ -1,12 +1,13 @@
 ---
+const a = "jajsn";
 import Layout from '../layouts/Layout.astro';
 import ParentInfoLalu from '../layouts/ParentInfoLalu.astro';
 import InfoTotal from '../components/InfoTotal.astro';
 import InfoLalu from '../components/InfoLalu.astro';
-import TombolEpik from '../components/TombolEpik.astro';
+import TombolAdmin from '../components/TombolAdmin.astro';
 ---
 
-<Layout title="Dana Porseni XVII">
+<Layout title="Seksi Dana Porseni XVII">
   
   <div class="mb-5" id="info">
     <InfoTotal teksAtas="Total Pendapatan" teksBawah="100.000,00"/>
@@ -18,6 +19,6 @@ import TombolEpik from '../components/TombolEpik.astro';
     </ParentInfoLalu>
   </div>
   
-  <TombolEpik teks="Admin"/>
+  <TombolAdmin teks="Admin"/>
   
 </Layout>

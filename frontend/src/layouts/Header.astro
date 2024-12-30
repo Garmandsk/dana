@@ -1,11 +1,11 @@
 ---
-const { judul } = Astro.props;
+const { judulBesar } = Astro.props;
 ---
 
-<h1 class="mt-3 mb-5 mx-auto">{judul}</h1>
+<h1 class="mt-3 mb-5 mx-auto">{judulBesar}</h1>
 
 <style>
-  
+
   h1{
     background: white;
     padding:8px;
@@ -14,13 +14,13 @@ const { judul } = Astro.props;
     border-radius: 75px;
     position: relative;
   }
-  
+
   @property --angle{
     syntax: "<angle>";
     initial-value: 0deg;
     inherits: false;
   }
-  
+
   h1::after, h1::before{
     content: "";
     position: absolute;
@@ -35,12 +35,12 @@ const { judul } = Astro.props;
     border-radius: 75px;
     animation: 3s spin linear infinite;
   }
-  
+
   h1::before{
     filter: blue(1.5rem);
     opacity: 0.5;
   }
-  
+
   @keyframes spin{
     from{
       --angle: 0deg;
@@ -48,5 +48,5 @@ const { judul } = Astro.props;
       --angle: 360deg;
     }
   }
-  
+
 </style>

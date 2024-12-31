@@ -1,0 +1,54 @@
+---
+const { judul } = Astro.props;
+---
+
+<h1 class="">{judul}</h1>
+
+<style>
+  h1{
+    text-align:center;
+    background: white;
+    padding:8px;
+    height: fit-content;
+    width: 30vw;
+    border-radius: 75px;
+    position: relative;
+    display:grid;
+    place-items:center;
+  }
+  
+  @property --angle{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+  
+  h1::after, h1::before{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 105%;
+    background-image: repeating-conic-gradient(from var(--angle), transparent 50%, blue);
+    top:50%;
+    left:50%;
+    translate: -50% -50%;
+    z-index: -1;
+    padding: 30px;
+    border-radius: 75px;
+    animation: 3s spin linear infinite;
+  }
+  
+  h1::before{
+    filter: blue(1.5rem);
+    opacity: 0.5;
+  }
+  
+  @keyframes spin{
+    from{
+      --angle: 0deg;
+    }to{
+      --angle: 360deg;
+    }
+  }
+  
+  </style>

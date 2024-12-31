@@ -1,8 +1,180 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
+import Kolom3 from '../layouts/Kolom3.astro';
+import Kolom2 from '../layouts/Kolom2.astro';
+import JudulKecil from '../components/JudulKecil.astro';
+import InputBarang from '../components/InputBarang.astro';
+import TombolEpik from '../components/TombolEpik.astro';
+import InfoLalu from '../components/InfoLalu.astro';
+
+import '../styles/admin.css';
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+
+  // Fungsi untuk menentukan nama barang berdasarkan indeks
+  const tentukanBarang = (i) => {
+    const daftarBarang = ["Momogi", "Chocolatos", "Nextar"]; // Sesuaikan daftar barang
+    const hargaBarang = [];
+    return daftarBarang[i - 1] || "Barang Tidak Diketahui";
+  };
+
+  const jumlahTotalBarang = () => {
+    let total = 0; // Variabel untuk menampung hasil penjumlahan
+    let teksStruk = ""; // Variabel untuk menampung teks struk
+
+    for (let i = 1; i <= 3; i++) {
+      const namaBarang = tentukanBarang(i);
+      const jumlahBarang = parseInt(formData.get(`jumlahBarang-${i}`)) || 0;
+      total += jumlahBarang;
+
+      // Tambahkan ke teks struk jika jumlah barang > 0
+      if (jumlahBarang > 0) {
+        teksStruk += `${namaBarang} x ${jumlahBarang}\n`;
+      }
+    }
+
+    console.log("Struk Barang:\n" + teksStruk); // Tampilkan teks struk
+    return total;
+  };
+
+  console.log("Total Barang:", jumlahTotalBarang()); // Panggil fungsi untuk mendapatkan hasil
+}
 ---
 
 <Layout title="Admin">
-  <HeaderAdmin judulBesar="Admin" tujuanTombolKembali="/"/>
+  <HeaderAdmin judul="Admin" tujuanLinkKembali="/admin"/>
+  
+  <JudulKecil judul="Menu"/>
+  
+  <form action="" method="POST">
+    
+    <!-- Jajanan -->
+    <Kolom3 justifyContent="space-around">
+      <div class="barang" data-id="1">
+        <p>Momogi</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id="1" type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-1" class="jumlahBarang" placeholder="0" name="jumlahBarang-1" value="" min="0">
+          <button class="btn" data-id="1" type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=2>
+        <p>Chocolatos</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=2 type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-2"class="jumlahBarang" placeholder="0" name="jumlahBarang-2" value="" min="0">
+          <button class="btn" data-id=2 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=3>
+        <p>Nextar</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=3 type="button" data-change="-1">-</button>
+          <input type="number" id=jumlahBarang-3 class="jumlahBarang" placeholder="0" name="jumlahBarang-3" value="" min="0">
+          <button class="btn" data-id=3 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+    </Kolom3>
+    
+    <!-- Makanan -->
+    <Kolom3 justifyContent="space-around">
+      <div class="barang" data-id="4">
+        <p>Pizza</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id="4" type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-4" class="jumlahBarang" placeholder="0" name="jumlahBarang-4" value="" min="0">
+          <button class="btn" data-id="4" type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=5>
+        <p>Ayam Penyet</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=5 type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-5"class="jumlahBarang" placeholder="0" name="jumlahBarang-5" value="" min="0">
+          <button class="btn" data-id=5 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=6>
+        <p>Donat</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=6 type="button" data-change="-1">-</button>
+          <input type="number" id=jumlahBarang-6 class="jumlahBarang" placeholder="0" name="jumlahBarang-6" value="" min="0">
+          <button class="btn" data-id=6 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+    </Kolom3>
+    
+    <!-- Minuman -->
+    <Kolom3 justifyContent="space-around">
+      <div class="barang" data-id="7">
+        <p>Leminerale</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id="7" type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-7" class="jumlahBarang" placeholder="0" name="jumlahBarang-7" value="" min="0">
+          <button class="btn" data-id="7" type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=8>
+        <p>Golda</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=8 type="button" data-change="-1">-</button>
+          <input type="number" id="jumlahBarang-8"class="jumlahBarang" placeholder="0" name="jumlahBarang-8" value="" min="0">
+          <button class="btn" data-id=8 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+      <div class="barang" data-id=9>
+        <p>Milku</p>
+        <Kolom3 justifyContent="center" gap="2vw">
+          <button class="btn" data-id=9 type="button" data-change="-1">-</button>
+          <input type="number" id=jumlahBarang-9 class="jumlahBarang" placeholder="0" name="jumlahBarang-9" value="" min="0">
+          <button class="btn" data-id=9 type="button" data-change="1">+</button>
+        </Kolom3>
+      </div>
+    </Kolom3>
+      
+      <div id="modal-container">
+        <Kolom2 justifyContent="space-around" gap="0vw" tambahan="my-5">
+          <button type="reset" class="btn" id="tombol-tambah">Reset</button>
+          <button type="button" class="btn" id="tombol-tambah" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Tambah
+          </button>
+        </Kolom2>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Barang:</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Struk
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="tombol-tambah" data-bs-dismiss="modal">Tutup</button>
+                <button class="btn btn-primary" id="tombol-tambah" type="submit">Konfirmasi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+  
+  <JudulKecil judul="Pendapatan"/>
+  
+  <Kolom2 justifyContent="space-around" gap="" tambahan="my-3">
+    <InfoLalu teksAtas="Total" teksBawah="50.000,00"/>
+    <InfoLalu teksAtas="Hari Ini" teksBawah="100.000,00"/>
+  </Kolom2>
+  <Kolom3 justifyContent="space-around" gap="5vw" tambahan="mb-5">
+    <InfoLalu teksAtas="Hari Lalu" teksBawah="50.000,00"/>
+    <InfoLalu teksAtas="Minggu Lalu" teksBawah="100.000,00"/>
+    <InfoLalu teksAtas="Bulan Lalu" teksBawah="150.000,00"/>
+  </Kolom3>
+  
 </Layout>
+
+<script is:inline src="/scripts/admin.js"></script>

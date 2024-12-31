@@ -12,10 +12,11 @@ const { teksAtas, teksBawah } = Astro.props;
   h6{
     background: white;
     padding:8px;
-    height: fit-content;
-    width: fit-content;
     border-radius: 10px;
     position: relative;
+    height:fit-content;
+    display:grid;
+    place-items: center;
   }
   
   .lalu{
@@ -29,11 +30,13 @@ const { teksAtas, teksBawah } = Astro.props;
   #info-total, .lalu .atas{
     color: black;
     margin-bottom: 0;
+    width: 115px;
   }
   
   #info-total, .lalu .bawah{
     color: #511F82;
     margin-top: 0;
+    width: fit-content;
   }
   
   @property --angle{

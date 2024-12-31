@@ -1,0 +1,18 @@
+---
+const { justifyContent = "center", gap = "0", tambahan="" } = Astro.props;
+---
+
+<div class=`${tambahan}` id="container">
+  <slot>
+    
+  </slot>
+</div>
+
+<style define:vars={{ justifyContent, gap}}>
+  #container{
+    display:flex;
+    align-items: center;
+    justify-content: var(--justifyContent);
+    gap: var(--gap);
+  }
+</style>

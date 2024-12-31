@@ -1,6 +1,7 @@
 ---
-import TombolEpik from '../components/TombolEpik.astro';
-const { judulBesar, tujuanTombolKembali } = Astro.props;
+import LinkEpik from '../components/LinkEpik.astro';
+import JudulBesar from '../components/JudulBesar.astro';
+const { judul, tujuanLinkKembali } = Astro.props;
 ---
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
   <div class="offcanvas-header">
@@ -40,72 +41,22 @@ const { judulBesar, tujuanTombolKembali } = Astro.props;
 </div>
 
 <div id="header">
-  <button class="btn btn-primary" id="tombol-offcanvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Menu</button>
+  <button class="btn btn-primary" id="tombol-offcanvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Halaman</button>
 
-  <h1 class="">{judulBesar}</h1>
+  <JudulBesar judul={judul}/>
   
-  <a 
-    class="btn"  
-    style={`color:white;`}
-    href={tujuanTombolKembali} 
-    role="button">
-    Kembali
-  </a>
-
+  <LinkEpik tujuanLinkKembali={tujuanLinkKembali}/>
 </div>
   
 <style>
   
   #header{
-    margin-top:3vw;
+    margin-top: 5vw;
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items:center;
     align-items:center;
-  }
-  
-  h1{
-    text-align:center;
-    background: white;
-    padding:8px;
-    height: 12vw;
-    width: 30vw;
-    border-radius: 75px;
-    position: relative;
-  }
-  
-  @property --angle{
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
-  
-  h1::after, h1::before{
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 105%;
-    background-image: repeating-conic-gradient(from var(--angle), transparent 50%, blue);
-    top:50%;
-    left:50%;
-    translate: -50% -50%;
-    z-index: -1;
-    padding: 30px;
-    border-radius: 75px;
-    animation: 3s spin linear infinite;
-  }
-  
-  h1::before{
-    filter: blue(1.5rem);
-    opacity: 0.5;
-  }
-  
-  @keyframes spin{
-    from{
-      --angle: 0deg;
-    }to{
-      --angle: 360deg;
-    }
+    place-items;center;
   }
   
   .btn {
@@ -113,6 +64,7 @@ const { judulBesar, tujuanTombolKembali } = Astro.props;
     height:10vw;
     width:20vw;
     padding: 8px 8px;
+    font-size:3vw;
     border: none;
     outline: none;
     color: #FFF;

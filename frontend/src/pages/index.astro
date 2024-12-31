@@ -1,7 +1,7 @@
 ---
 const a = "jajsn";
 import Layout from '../layouts/Layout.astro';
-import ParentInfoLalu from '../layouts/ParentInfoLalu.astro';
+import Kolom3 from '../layouts/Kolom3.astro';
 import Header from '../layouts/Header.astro';
 import InfoTotal from '../components/InfoTotal.astro';
 import InfoLalu from '../components/InfoLalu.astro';
@@ -13,11 +13,11 @@ import TombolAdmin from '../components/TombolAdmin.astro';
   <div class="mb-5" id="info">
     <InfoTotal teksAtas="Total Pendapatan" teksBawah="100.000,00"/>
 
-    <ParentInfoLalu>
+    <Kolom3 justifyContent="center" gap="5vw">
       <InfoLalu teksAtas="Hari Lalu" teksBawah="50.000,00"/>
       <InfoLalu teksAtas="Minggu Lalu" teksBawah="100.000,00"/>
       <InfoLalu teksAtas="Bulan Lalu" teksBawah="150.000,00"/>
-    </ParentInfoLalu>
+    </Kolom3>
   </div>
   
   <TombolAdmin teks="Admin"/>

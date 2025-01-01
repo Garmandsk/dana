@@ -1,23 +1,16 @@
 ---
-const { tujuanLinkKembali } = Astro.props;
+const { teks = "Halo", tujuanLink = "/", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 ---
 
-<a 
-    class="btn"  
-    style={`color:white;`}
-    href={tujuanLinkKembali} 
-    role="button">
-    Kembali
-  </a>
+<a class=`btn ${tambahan}` href={tujuanLink} role="button">{teks}</a>
   
-<style>
+<style define:vars={{ width, padding }}>
     
     .btn {
     text-align:center;
-    height:10vw;
-    width:20vw;
-    padding: 8px 8px;
-    font-size:3vw;
+    height:fit-content;
+    width: var(--width);
+    padding:var(--padding);
     border: none;
     outline: none;
     color: #FFF;
@@ -27,6 +20,7 @@ const { tujuanLinkKembali } = Astro.props;
     border-radius: 12px;
     display:grid;
     place-items:center;
+    font-size:15px;
   }
 
 .btn::after {

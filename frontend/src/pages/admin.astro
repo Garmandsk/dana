@@ -44,9 +44,9 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout title="Admin">
-  <HeaderAdmin judul="Admin" tujuanLinkKembali="/admin"/>
+  <HeaderAdmin judul="Admin" tujuanLink="/admin"/>
   
-  <JudulKecil judul="Menu"/>
+  <JudulKecil judul="Menu" tambahan="mt-5"/>
   
   <form action="" method="POST">
     
@@ -163,7 +163,7 @@ if (Astro.request.method === "POST") {
       </div>
   </form>
   
-  <JudulKecil judul="Pendapatan"/>
+  <JudulKecil judul="Pendapatan" tambahan="mb-3"/>
   
   <Kolom2 justifyContent="space-around" gap="" tambahan="my-3">
     <InfoLalu teksAtas="Total" teksBawah="50.000,00"/>

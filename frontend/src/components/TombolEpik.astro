@@ -1,8 +1,8 @@
 ---
-const { teks, width, padding, tambahan } = Astro.props;
+const { teks = "Halo", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 ---
 
-<button class=`btn btn-primary ${tambahan}` type="button">{teks}</button>
+<button class=`btn ${tambahan}` type="button">{teks}</button>
   
 <style define:vars={{ width, padding }}>
     
@@ -20,6 +20,7 @@ const { teks, width, padding, tambahan } = Astro.props;
     border-radius: 12px;
     display:grid;
     place-items:center;
+    font-size:15px;
   }
 
 .btn::after {

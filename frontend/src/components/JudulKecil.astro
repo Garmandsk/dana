@@ -1,13 +1,11 @@
 ---
-const { judul } = Astro.props;
+const { judul = "-", tambahan } = Astro.props;
 ---
 
-<h3>{judul}</h3>
+<h3 class=`${tambahan}`>{judul}</h3>
 
 <style>
   h3{
-    margin-top:5vw;
-    margin-bottom: 5vw;
     background:white;
     text-align: center;
     height:fit-content;

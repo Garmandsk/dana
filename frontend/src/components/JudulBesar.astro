@@ -1,5 +1,5 @@
 ---
-const { judul } = Astro.props;
+const { judul = "Halo" } = Astro.props;
 ---
 
 <h1 class="">{judul}</h1>
@@ -8,6 +8,7 @@ const { judul } = Astro.props;
   h1{
     text-align:center;
     background: white;
+    color:black;
     padding:8px;
     height: fit-content;
     width: 30vw;

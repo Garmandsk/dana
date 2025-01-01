@@ -1,7 +1,7 @@
 ---
 import LinkEpik from '../components/LinkEpik.astro';
 import JudulBesar from '../components/JudulBesar.astro';
-const { judul, tujuanLinkKembali } = Astro.props;
+const { judul, tujuanLink } = Astro.props;
 ---
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
   <div class="offcanvas-header">
@@ -45,7 +45,7 @@ const { judul, tujuanLinkKembali } = Astro.props;
 
   <JudulBesar judul={judul}/>
   
-  <LinkEpik tujuanLinkKembali={tujuanLinkKembali}/>
+  <LinkEpik teks="Kembali" tujuanLink={tujuanLink} width="20vw"/>
 </div>
   
 <style>
@@ -61,10 +61,10 @@ const { judul, tujuanLinkKembali } = Astro.props;
   
   .btn {
     text-align:center;
-    height:10vw;
+    height:fit-content;
     width:20vw;
     padding: 8px 8px;
-    font-size:3vw;
+    font-size:15px;
     border: none;
     outline: none;
     color: #FFF;

@@ -1,8 +1,130 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
+import JudulKecil from '../components/JudulKecil.astro';
+import TombolEpik from '../components/TombolEpik.astro';
+import LinkEpik from '../components/LinkEpik.astro';
 ---
 
 <Layout title="Riwayat">
-  <HeaderAdmin judul="Riwayat" tujuanLinkKembali="/admin"/>
+  <HeaderAdmin judul="Riwayat" tujuanLink="/admin" />
+  
+  <form action="" method="POST">
+    <input class="mt-5" id="tombol-cari" name="tombol-cari" 
+           type="text" placeholder="Cari">
+  </form>
+  
+  <JudulKecil tambahan="my-3 text-white"/>
+  <div class="container-riwayat ">
+    <h2>#1</h2>
+    
+    <div class="container-barang">
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+    </div>
+    
+    <div class="container-tombol">
+      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
+      <TombolEpik teks="Hapus" width="15vw" />
+    </div>
+  </div>
+  
+  <JudulKecil tambahan="my-3 text-white"/>
+  <div class="container-riwayat">
+    <h2>#2</h2>
+    
+    <div class="container-barang">
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+    </div>
+    
+    <div class="container-tombol">
+      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
+      <TombolEpik teks="Hapus" width="15vw" />
+    </div>
+  </div>
+  
+  <JudulKecil tambahan="my-3 text-white"/>
+  <div class="container-riwayat ">
+    <h2>#3</h2>
+    
+    <div class="container-barang">
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+      <p>Chocolatos X 1</p>
+    </div>
+    
+    <div class="container-tombol">
+      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
+      <TombolEpik teks="Hapus" width="15vw" />
+    </div>
+  </div>
+  <JudulKecil tambahan="my-3 text-white"/>
 </Layout>
+
+<style>
+  /* Menempatkan form di tengah halaman */
+  form {
+    display: grid;
+    place-items: center; /* Center form horizontally & vertically */
+  }
+
+  /* Styling untuk input */
+  #tombol-cari {
+    width: 200px; /* Panjang input */
+    height:35px;
+    padding: 10px; /* Jarak teks dari tepi */
+    text-align: center; /* Teks di tengah secara horizontal */
+    border-radius: 10px; /* Membuat sudut membulat */
+    border: 1px solid #ccc; /* Border abu-abu */
+    font-size: 20px; /* Ukuran teks */
+  }
+
+  /* Tambahkan hover effect (opsional) */
+  #tombol-cari:hover {
+    border-color: #6578B2; /* Warna border saat dihover */
+  }
+  
+  .container-riwayat{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+  }
+  
+  h2{
+    color:white;
+    border: 5px solid purple;
+    border-radius: 10px;
+    padding: 8px 16px;
+  }
+  
+  .container-barang{
+    border:5px solid purple;
+    border-radius:10px;
+    padding: 4px 8px;
+  }
+  
+  p{
+    color:white;
+    brder: 5px solid purple;
+    margin-top:0;
+    margin-bottom:0;
+  }
+  
+  .container-tombol{
+    display:grid;
+    grid-template-rows: 1fr 1fr;
+    place-items: center;
+    gap: 30px;
+  }
+  
+  
+</style>

@@ -1,0 +1,148 @@
+---
+import Kolom3 from '../layouts/Kolom3.astro';
+const { namaBarang = ".", teks = "hallo", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+---
+
+<form action="" method="POST">
+  <div class="text-dark" id="modal-container" data-id="1">
+    <button type="button" class="btn" id="tombol-tambah" data-bs-toggle="modal" data-bs-target="#modal-hapus-${namaBarang}">
+      Hapus
+    </button>
+  
+    <!-- Modal -->
+    <div class="modal fade" id="modal-hapus-${namaBarang}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Barang ?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="my-auto">{teks}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="tombol-footer btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button class="tombol-footer btn btn-primary" type="submit">Konfirmasi</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Menangkap tombol ubah jumlah
+    const tombolUbah = document.querySelectorAll(".tombol-ubah");
+
+    tombolUbah.forEach((tombol) => {
+      tombol.addEventListener("click", () => {
+        const change = parseInt(tombol.dataset.change, 10); // Nilai perubahan (+1 atau -1)
+        const id = tombol.dataset.id; // ID barang
+        ubahJumlah(change, id); // Panggil fungsi ubah jumlah
+      });
+    });
+
+    function ubahJumlah(change, id) {
+      const jumlahBarangInput = document.getElementById(`jumlahBarang-${id}`);
+      let currentValue = parseInt(jumlahBarangInput.value) || 0;
+
+      // Update nilai stok, pastikan tidak negatif
+      let newValue = currentValue + change;
+      if (newValue < 0) {
+        newValue = 0;
+      }
+
+      jumlahBarangInput.value = newValue; // Set nilai baru ke input
+    }
+  });
+</script>
+
+<style define:vars={{ width, padding }}>
+  .modal-body, p{
+    display:grid;
+    place-items:center;
+  }
+  
+  .btn {
+    text-align: center;
+    height: fit-content;
+    width: var(--width);
+    padding: var(--padding);
+    border: none;
+    outline: none;
+    color: #FFF;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+  }
+
+  .btn::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+  }
+
+  /* Glow */
+  .btn::before {
+    content: "";
+    background: linear-gradient(
+      45deg,
+      #FF0000, #FF7300, #FFFB00, #48FF00,
+      #00FFD5, #002BFF, #FF00C8, #FF0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 600%;
+    z-index: -1;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    filter: blur(8px);
+    animation: glowing 20s linear infinite;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+    opacity: 0;
+  }
+
+  @keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+  }
+
+  /* Hover */
+  .btn:hover::before {
+    opacity: 1;
+  }
+
+  .btn:active:after {
+    background: transparent;
+  }
+
+  .btn:active {
+    color: #000;
+    font-weight: bold;
+  }
+
+  .tombol-footer {
+    width: fit-content;
+  }
+
+  input {
+    border-radius: 10px;
+    width: 40px;
+    text-align: center;
+  }
+</style>

@@ -6,6 +6,8 @@ import JudulKecil from '../components/JudulKecil.astro';
 import TombolEpik from '../components/TombolEpik.astro';
 import Kotak from '../components/Kotak.astro';
 import InfoLalu from '../components/InfoLalu.astro';
+import ModalUbah from '../components/ModalUbah.astro';
+import ModalHapus from '../components/ModalHapus.astro';
 
 ---
 
@@ -19,35 +21,11 @@ import InfoLalu from '../components/InfoLalu.astro';
       <div class="container-barang">
         <p class="my-auto">Chocolatos</p>
         <p class="my-auto">X</p>
-        <p class="my-auto">1</p>
+        <p class="my-auto">9</p>
       </div>
       <div class="container-tombol">
-        <TombolEpik teks="Ubah" width="15vw"/>
-        <TombolEpik teks="Hapus" width="15vw"/>
-      </div>
-    </div>
-    <Kotak tambahan="my-3"/>
-    <div class="container-baris">
-      <div class="container-barang">
-        <p class="my-auto">Chocolatos</p>
-        <p class="my-auto">X</p>
-        <p class="my-auto">1</p>
-      </div>
-      <div class="container-tombol">
-        <TombolEpik teks="Ubah" width="15vw"/>
-        <TombolEpik teks="Hapus" width="15vw"/>
-      </div>
-    </div>
-    <Kotak tambahan="my-3"/>
-    <div class="container-baris">
-      <div class="container-barang">
-        <p class="my-auto">Chocolatos</p>
-        <p class="my-auto">X</p>
-        <p class="my-auto">1</p>
-      </div>
-      <div class="container-tombol">
-        <TombolEpik teks="Ubah" width="15vw"/>
-        <TombolEpik teks="Hapus" width="15vw"/>
+        <ModalUbah namaBarang="Chocolatos" jumlahBarang="9" width="15vw"/>
+        <ModalHapus namaBarang="Chocolatos" teks="Chocolatos X 9" width="15vw"/>
       </div>
     </div>
     <Kotak tambahan="my-3"/>

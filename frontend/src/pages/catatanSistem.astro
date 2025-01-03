@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeaderAdmin from '../layouts/HeaderAdmin.astro';
+import Box from '../layouts/Box.astro';
+import ModalUrut from '../components/ModalUrut.astro';
+---
+
+<Layout title="Catatan Sistem">
+  <HeaderAdmin judul="Catatan Sistem" tujuanLink="/riwayat"/>
+  <ModalUrut teks="Urutkan Sesuai" posisiTombol="my-5 mx-auto"/>
+  
+  <Box nomor = 1 method="Di-Ubah" pengguna="Samsung">
+    <p>Chocolatos X 1</p>
+    <p>Leminerale X 2</p>
+    <p>Donat X 4</p>
+  </Box>
+</Layout>

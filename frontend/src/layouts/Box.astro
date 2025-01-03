@@ -1,0 +1,60 @@
+---
+const { nomor = 0, method = "Error", pengguna = "Udin" } = Astro.props;
+---
+<div class="box">
+  <h2 class="mx-auto my-3">#{nomor}</h2>
+  <div class="container-detail py-3 px-2">
+    <h3 class="m-0">{method}</h3>
+    <div class="container-barang">
+      <slot>
+        <p>Tidak Ada</p>
+      </slot>
+    </div>
+    <h3 class="m-0">{pengguna}</h3>
+  </div>
+</div>
+
+<style>
+  .box{
+    border:3px solid purple;
+    border-radius: 10px;
+    color:white;
+  }
+  
+  h2{
+    border: 3px solid purple;
+    border-radius:10px;
+    display:grid;
+    place-items: center;
+    width:fit-content;
+    padding: 4px 32px;
+  }
+  
+  .container-detail{
+    border-top:10px solid white;
+    display:flex;
+    rid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+    align-items: center;
+    justify-content: space-around;
+    gap:2vw;
+  }
+  
+  h3{
+    border:3px solid purple;
+    border-radius:10px;
+    padding:8px 16px;
+    display:grid;
+    place-items:center;
+    width:fit-content;
+  }
+  
+  .container-barang{
+    border: 3px solid purple;
+    border-radius:10px;
+    padding:8px 16px;
+    display:grid;
+    place-items:center;
+    width:fit-content;
+  }
+</style>

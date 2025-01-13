@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const { Salam } = require('./handler.js');
 
 const routes = [
@@ -43,6 +44,34 @@ const routes = [
         nama: "Arman"
       }
       return h.view("index.hbs", data)
+    }
+  },
+  {
+    method: "*",
+    path: "/cek-joi/{nama?}",
+    handler: (request, h) => {
+      const { nama = "Manusia" } = request.params;
+      const { namaBarang = "Abu", jumlahBarang = 0 } = request.payload;
+      const data = {
+        "nama": nama,
+        "namaBarang": namaBarang,
+        "jumlahBarang": jumlahBarang
+      }
+      return data;
+    },
+    options: {
+      validate: {
+        params: Joi.object({
+          nama: Joi.string().min(3).max(10)
+        }),
+        query: Joi.object({
+          limit: Joi.number().integer().min(1).max(100).default(10)
+        }),
+        payload: Joi.object({
+          namaBarang: Joi.string().min(1).max(140),
+          jumlahBarang: Joi.number().integer().min(1).max(100)
+        })
+      },
     }
   },
   {

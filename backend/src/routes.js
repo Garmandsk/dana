@@ -18,7 +18,7 @@ const routes = [
     method: "GET",
     path: "/login",
     handler: (request, h) => {
-      return h.view('login.hbs');
+      return h.view('login.hbs').test();
     },
   },
   {

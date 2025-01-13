@@ -3,6 +3,7 @@ const Hapi = require('@hapi/hapi');
 const Inert = require("@hapi/inert");
 const Vision = require("@hapi/vision")
 const GeoLocate = require("hapi-geo-locate");
+const hapiDevError = require('hapi-dev-errors');
 const routes = require("./routes");
 
 SUPABASE_URL = "";
@@ -32,6 +33,13 @@ const init = async () => {
     },
     {
       plugin: Vision,
+    },
+    {
+      plugin: hapiDevError,
+      options: {
+        showErrors: process.env.NODE_ENV !== 'production',
+        toTerminal: true
+      }
     }
   ])
   

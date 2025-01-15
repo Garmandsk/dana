@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Boom = require("@hapi/boom");
 const { Salam } = require('./handler.js');
 
 const routes = [
@@ -18,8 +19,24 @@ const routes = [
     method: "GET",
     path: "/login",
     handler: (request, h) => {
-      return h.view('login.hbs').test();
+      if(request.auth.isAuthenticated){
+        return h.redirect("/dynamic")
+      }
+      return h.view('login.hbs');
     },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
+  },
+  {
+    method: "GET",
+    path: "/logout",
+    handler: (request, h) => {
+      request.cookieAuth.clear();
+      return h.redirect("/login")
+    }
   },
   {
     method: "POST",
@@ -29,12 +46,20 @@ const routes = [
       const { password } = request.payload;
       const data = {
         username,
+        password
       }
       if(username === "arman" && password === "1234") {
-        return h.view("akun.hbs", data)
+        request.cookieAuth.set(data);
+        /* return h.view("akun.hbs", data) */
+        return ` Halo ${request.auth.credentials.username} `;
       }
       return h.redirect("/login")
     },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
   {
     method: "GET",
@@ -72,6 +97,23 @@ const routes = [
           jumlahBarang: Joi.number().integer().min(1).max(100)
         })
       },
+    }
+  },
+  {
+    method: "GET",
+    path: "/login-basic",
+    handler: (request, h) => {
+      return `Selamat Datang Di Halaman Rahasia, ${request.auth.credentials.username}`
+    },
+    options: {
+      auth: "login"
+    }
+  },
+  {
+    method: "GET",
+    path: "/logout-basic",
+    handler: (request, h) => {
+      return Boom.unauthorized("Logout Berhasil");
     }
   },
   {
@@ -155,6 +197,11 @@ const routes = [
     handler: (request, h) => {
       return 'Halaman Tidak Ditemukan';
     },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
 ];
 

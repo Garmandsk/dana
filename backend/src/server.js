@@ -1,10 +1,7 @@
 const path = require("path");
 const Hapi = require('@hapi/hapi');
-const Inert = require("@hapi/inert");
-const Vision = require("@hapi/vision")
-const GeoLocate = require("hapi-geo-locate");
-const hapiDevError = require('hapi-dev-errors');
 const routes = require("./routes");
+const plugin = require("./plugin")
 
 SUPABASE_URL = "";
 SUPABASE_SERVICE_ROLE = "";
@@ -21,27 +18,63 @@ const init = async () => {
     },
   });
   
-  await server.register([
-    {
-      plugin: GeoLocate,
-      option: {
-        enabledByDefault: true
-      }
+  await server.register(plugin)
+  
+  const users = {
+    Arman: {
+      id: 0,
+      username: "Arman",
+      password: "123"
     },
-    {
-      plugin: Inert,
-    },
-    {
-      plugin: Vision,
-    },
-    {
-      plugin: hapiDevError,
-      options: {
-        showErrors: process.env.NODE_ENV !== 'production',
-        toTerminal: true
-      }
+    Gerti: {
+      id: 1,
+      username: "Gerti",
+      password: "098"
     }
-  ])
+  };
+  
+  const validate = async (request, username, password, h) => {
+    // Cari pengguna berdasarkan username
+    const user = users[username];
+  
+    // Jika pengguna tidak ditemukan
+    if (!user) {
+      console.log(`Pengguna tidak ditemukan, Username: ${users[username]}`);
+      return { isValid: false, pesan: "Pengguna tidak ditemukan" };
+    }
+  
+    // Cek apakah password cocok
+    if (user.password === password) {
+      return { 
+        isValid: true, 
+        credentials: { id: user.id, username: user.username } 
+      };
+    }
+  
+    // Jika password salah
+    console.log("Password Salah");
+    return { isValid: false, pesan: "Password salah" };
+  };
+  
+  server.auth.strategy("login", "basic", { validate });
+  
+  server.auth.strategy("session", "cookie", {
+    cookie: {
+      name: "session",
+      password: "kamalamakamalamakamalamakamalama",
+      isSecure: false,
+      ttl: 1000 * 60
+    },
+    redirectTo: "/login",
+    validate: async (request, session) => {
+      if(session.username = "arman", session.password = "1234"){
+        return { isValid: true, credentials: { username: "arman" }};
+      }
+      return { isValid: false }
+    }
+  });
+  
+  server.auth.default("session");
   
   server.views({
     engines: {

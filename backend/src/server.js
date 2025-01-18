@@ -2,9 +2,7 @@ const path = require("path");
 const Hapi = require('@hapi/hapi');
 const routes = require("./routes");
 const plugin = require("./plugin")
-
-SUPABASE_URL = "";
-SUPABASE_SERVICE_ROLE = "";
+const db = require("./db.js");
 
 const init = async () => {
   const server = Hapi.server({

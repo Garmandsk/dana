@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const Boom = require("@hapi/boom");
 const { Salam } = require('./handler.js');
+const db = require("./db.js");
 
 const routes = [
   {
@@ -119,9 +120,43 @@ const routes = [
   {
     method: "GET",
     path: "/",
-    handler: (request, h) => {
-      return "Halaman Utama"
+    handler: async (request, h) => {
+      try {
+        const { data, error } = await db
+          .from('total')
+          .select();
+  
+        if (error) {
+          console.error("Error fetching data:", error);
+          throw Boom.internal("Gagal mendapatkan data dari database", { error: error.message });
+        }
+  
+        if (data.length > 0) {
+          console.log("Data fetched:", data);
+          return h.response({
+            pesan: "Route Utama",
+            data: data,
+          }).code(200); // OK
+        }
+  
+        // Jika data kosong
+        throw Boom.notFound("Data Kosong");
+      } catch (err) {
+        // Jika error adalah instance Boom, lemparkan apa adanya
+        if (Boom.isBoom(err)) {
+          return err;
+        }
+  
+        // Untuk error tak terduga, buat error internal
+        console.error("Unexpected error:", err);
+        return Boom.internal("Terjadi kesalahan pada server", { error: err.message });
+      }
     },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
   {
     method: '*',
@@ -129,6 +164,26 @@ const routes = [
     handler: (request, h) => {
       return 'Halaman tidak dapat diakses dengan method tersebut';
     },
+  },
+  {
+    method: "GET",
+    path: "/statistik",
+    handler: async (request, h) => {
+      try {
+        const { data, error } = await db.rpc('get_statistik'); // Menggunakan fungsi SQL di supabase
+        if (error) throw error;
+    
+        console.log('Statistik Pendapatan:', data);
+        return data;
+      } catch (err) {
+        console.error('Error:', err.message);
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
   {
     method: "GET",

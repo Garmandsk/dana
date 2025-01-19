@@ -172,8 +172,6 @@ const routes = [
       try {
         const { data, error } = await db.rpc('get_statistik'); // Menggunakan fungsi SQL di supabase
         if (error) throw error;
-    
-        console.log('Statistik Pendapatan:', data);
         return data;
       } catch (err) {
         console.error('Error:', err.message);
@@ -186,11 +184,151 @@ const routes = [
     }
   },
   {
-    method: "GET",
-    path: '/admin',
-    handler: (request, h) => {
-      return 'Halaman Admin';
+    method: "POST",
+    path: "/tambah-riwayat",
+    handler: async (request, h) => {
+      try {
+        // Insert data tanpa kolom tambahan, hanya untuk memicu id baru
+        const { data, error } = await db
+          .from("riwayat")
+          .insert({})
+          .select("id"); // Ambil id dari record baru
+  
+        if (error) {
+          console.error("Error inserting:", error);
+          return h.response({ status: "error", message: error.message }).code(500);
+        }
+  
+        // Kembalikan id yang baru dibuat
+        return h.response({
+          status: "success",
+          newId: data[0].id,
+        }).code(200);
+      } catch (err) {
+        console.error("Handler error:", err);
+        return h.response({ status: "error", message: err.message }).code(500);
+      }
     },
+    options: {
+      auth: {
+        mode: "try",
+      },
+    },
+  }, 
+  {
+    method: "POST",
+    path: "/tambah-barang",
+    handler: async (request, h) => {
+      if(request.payload){
+        const { newId, namaBarang, jumlahBarang, hargaBarang, subTotal } = request.payload;
+        /* console.log(request.payload); */
+        try {
+          const { data, error } = await db.from("barangg").insert({
+            id_riwayat: newId,
+            nama_barang: namaBarang,
+            jumlah_barang: jumlahBarang,
+            harga_barang: hargaBarang,
+            sub_total: subTotal,
+          });
+    
+          if (error) {
+            console.error("Error inserting barang:", error);
+            return h.response({
+              status: "fail",
+              message: error.message,
+              data: request.payload
+            }).code(500);
+          }
+    
+          return h.response({
+            status: "success",
+            message: `Barang berhasil ditambahkan`,
+          }).code(200);
+        } catch (err) {
+          console.error("Handler error:", err);
+          return h.response({ status: "error", message: err.message }).code(500);
+        }
+      }
+      return Boom.badRequest("Data Kosong");
+    },
+    options: {
+      auth: {
+        mode: "try",
+      },
+      validate: {
+        payload: Joi.object({
+          newId: Joi.number().integer().required(),
+          namaBarang: Joi.string().required(),
+          jumlahBarang: Joi.number().integer().required(),
+          hargaBarang: Joi.number().integer().required(),
+          subTotal: Joi.number().integer().required(),
+        }),
+      },
+    },
+  },
+  {
+    method: "POST",
+    path: "/tambah-total",
+    handler: async (request, h) => {
+      if(request.payload){
+        console.log(request.payload);
+        const { newId, totalJenisBarang, totalJumlahBarang, totalHarga } = request.payload;
+        try{
+          const { error } = await db
+          .from("total")
+            .insert({
+              id_riwayat: newId,
+              total_jenis_barang: totalJenisBarang,
+              total_jumlah_barang: totalJumlahBarang,
+              total_harga: totalHarga,
+          })
+          if(error){
+            console.error("Error Inserting Total ", error);
+            return h.response({
+              status: "fail",
+              message: "Gagal Nambah Total"
+            }).code(400)
+          }
+          return h.response({
+            status: "succes",
+            message: "Total berhasil ditambahkan"
+          }).code(200)
+        }catch(err){
+          console.error("Handler Error ", err)
+          return Boom.internal("Kesalahan Handler")
+        }
+      }
+      return Boom.badRequest("Data Kosong");
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        payload: Joi.object({
+          newId: Joi.number().integer().required(),
+          totalJenisBarang: Joi.number().integer().required(),
+          totalJumlahBarang: Joi.number().integer().required(),
+          totalHarga: Joi.number().integer().required(),
+        })
+      }
+    }
+  },
+  {
+    method: "POST",
+    path: "/test-post",
+    handler: async (request, h) => {
+      if(request.payload){
+        console.log("Payload diterima:", request.payload);
+        return h.response({ status: "success", message: "Data diterima" }).code(200)
+      }
+      return Boom.notFound();
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
   {
     method: '*',

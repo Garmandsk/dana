@@ -9,9 +9,17 @@ const init = async () => {
     port: 5000,
     host: "localhost",
     // tanpa cors kita tidak dapat menyimpan data dari frontend yang deploy
-    routes: {
+    /* routes: {
       cors: {
        origin: ['*'],
+      },
+    },
+    */
+    routes: {
+      cors: true, // Izinkan CORS
+      payload: {
+        parse: true,
+        allow: 'application/json',
       },
     },
   });

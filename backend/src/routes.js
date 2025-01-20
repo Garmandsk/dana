@@ -331,24 +331,84 @@ const routes = [
     }
   },
   {
-    method: '*',
-    path: '/admin',
-    handler: (request, h) => {
-      return 'Halaman tidak dapat diakses dengan method tersebut';
-    },
-  },
-  {
     method: "GET",
     path: "/riwayat",
-    handler: (request, h) => {
+    handler: async (request, h) => {
+      try{
+        const { data, error } = await db
+          .from("riwayat")
+          .select()
+        if(error){
+          console.error("Data Riwayat Tidak dapat diambil")
+          return Boom.notFound();
+        }
+        return h.response({
+          status: "succes",
+          message: "Data Riwayat didapatkan",
+          data,
+        }).code(200);
+      }catch(err){
+        if(err){
+          console.error("Error Handler");
+          Boom.internal("Error Handler");
+        }
+      }
       return "Halaman Riwayat";
     },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
   },
   {
     method: '*',
     path: '/riwayat',
     handler: (request, h) => {
       return 'Halaman tidak dapat diakses dengan method tersebut';
+    },
+  },
+  {
+    method: "POST",
+    path: "/riwayat-barang",
+    handler: async (request, h) => {
+      const { id } = request.payload; // Ambil id dari payload
+      console.log("Payload diterima:", request.payload);
+
+      if (!id) {
+        return Boom.badRequest("Masukkan ID riwayat.");
+      }
+
+      try {
+        const { data, error } = await db.rpc("get_barang_by_riwayat", { riwayat_id: id });
+
+        if (error) {
+          console.error("Error fetching data:", error.message);
+          return Boom.badRequest(error.message);
+        }
+
+        console.log("Data berhasil diambil:", data);
+
+        // Kembalikan data ke client
+        return h.response({
+          status: "success",
+          data: data,
+        }).code(200);
+
+      } catch (err) {
+        console.error("Error handler:", err.message);
+        return Boom.internal("Terjadi kesalahan pada server.");
+      }
+    },
+    options: {
+      auth: {
+        mode: "try",
+      },
+      validate: {
+        payload: Joi.object({
+          id: Joi.number().integer().required(), // Validasi payload harus ada id dan berupa integer
+        }),
+      },
     },
   },
   {

@@ -5,6 +5,6 @@ SUPABASE_SERVICE_ROLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
-console.log(db);
+console.log("Database Terhubung");
 
 module.exports = db;

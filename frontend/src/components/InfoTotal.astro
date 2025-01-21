@@ -1,10 +1,19 @@
 ---
 const { teksAtas, teksBawah } = Astro.props;
+const formatRupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number);
+};
+
+const nilaiRupiah = formatRupiah(teksBawah);
 ---
 
 <div class="mb-3" id="info-total">
   <h6 class="atas" style="color: black;">{teksAtas}</h6>
-  <h6 class="bawah">{teksBawah}</h6>
+  <h6 class="bawah">{nilaiRupiah}</h6>
 </div>
 
 <style>

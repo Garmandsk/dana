@@ -1,0 +1,115 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import HeaderAdmin from '../../layouts/HeaderAdmin.astro';
+import Kolom2 from '../../layouts/Kolom2.astro';
+import JudulKecil from '../../components/JudulKecil.astro';
+import TombolEpik from '../../components/TombolEpik.astro';
+import Kotak from '../../components/Kotak.astro';
+import InfoLalu from '../../components/InfoLalu.astro';
+import ModalUbah from '../../components/ModalUbah.astro';
+import TombolHapus from '../../components/TombolHapus.astro';
+
+const { id = 0 } = Astro.params;
+
+const responseRiwayatBarang = await fetch (`http://localhost:5000/riwayat-barang/${id}`);
+const resultRiwayatBarang = await responseRiwayatBarang.json();
+//console.log(resultRiwayatBarang);
+
+const Datas = resultRiwayatBarang.data;
+//console.log(Datas);
+
+const responseTotal = await fetch(`http://localhost:5000/total/${id}`,{
+  method: "GET",
+})
+const resultTotal = await responseTotal.json();
+if(resultTotal.data[0] === undefined){
+  return Astro.redirect("/error");
+}
+// console.log(resultTotal);
+const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.data[0];
+  //console.log(total_jenis_barang);
+---
+
+{/*
+  <div id="container-utama">
+    <div class="container-baris">
+      <div class="container-barang">
+        <p class="my-auto">Chocolatos</p>
+        <p class="my-auto">X</p>
+        <p class="my-auto">9</p>
+      </div>
+      <div class="container-tombol">
+        <ModalUbah namaBarang="Chocolatos" jumlahBarang="9" width="15vw"/>
+        <TombolHapus namaBarang="Chocolatos" teks="Chocolatos X 9" width="15vw"/>
+      </div>
+    </div>
+    <Kotak tambahan="my-3"/>
+  </div>
+*/}
+
+<Layout title="Ubah Riwayat">
+  <HeaderAdmin judul="Ubah Riwayat" tujuanLink="/riwayat" />
+  
+  <JudulKecil judul=`#${id}` tambahan="mt-5 mb-3 py-2"/>
+  
+  <div id="container-utama">
+    {
+      Datas.map((barang) => (
+        <div class="container-baris">
+          <div class="container-barang">
+            <p class="my-auto">{barang.nama_barang}</p>
+            <p class="my-auto">X</p>
+            <p class="my-auto">{barang.jumlah_barang}</p>
+          </div>
+          <div class="container-tombol">
+            <ModalUbah namaBarang={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
+            <TombolHapus judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw" target={barang.id}/>
+          </div>
+        </div>
+        <Kotak tambahan="my-3"/>
+      ))
+    }
+  </div>
+  
+  <InfoLalu teksAtas="Total Harga" teksBawah={total_harga} tambahan="my-auto"/>
+  <Kolom2 justifyContent="space-around">
+    <InfoLalu teksAtas="Total Jenis Barang" teksBiasa={total_jenis_barang}/>
+    <InfoLalu teksAtas="Total Jumlah Barang" teksBiasa={total_jumlah_barang}/>
+  </Kolom2>
+</Layout>
+
+<style>
+  #container-utama{
+    color:white;
+  }
+  
+  .container-baris{
+    order:1px solid purple;
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    pace-items: center;
+    gap:3vw;
+  }
+  
+  .container-barang{
+    order:1px solid purple;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:3vw;
+  }
+  
+  p{
+    border: 1px solid purple;
+    border-radius:10px;
+    display:grid;
+    padding:4px 8px;
+    place-items: center;
+  }
+  
+  .container-tombol{
+    order:1px solid purple;
+    display:flex;
+    justify-content: space-between;
+  }
+
+</style>

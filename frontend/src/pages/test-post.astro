@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+if(Astro.request.method === "POST"){
+  const formData = await Astro.request.formData();
+  console.log(formData);
+  const nama = formData.get("nama");
+  const nama2 = formData.get("nama2");
+  const response = await fetch("http://localhost:5000/test-post", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      nama: nama,
+      nama2: nama2
+    }),
+  });
+  
+  const result = await response.json();
+  console.log(result);
+}
+---
+
+<Layout>
+  <form action="" method="POST">
+    <input type="text" name="nama">
+    <input type="text" name="nama2">
+    <input type="submit">
+  </form>
+</Layout>

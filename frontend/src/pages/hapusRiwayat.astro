@@ -1,0 +1,17 @@
+---
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const idRiwayat = formData.get("idRiwayat");  // Ambil idRiwayat dari formData
+  const responseHapusRiwayat = await fetch(`http://localhost:5000/riwayat-hapus/${idRiwayat}`, {
+    method: "DELETE",
+  });
+  
+  const resultHapusRiwayat = await responseHapusRiwayat.json();
+  console.log(resultHapusRiwayat);
+  if(resultHapusRiwayat.status === "succes"){
+    return Astro.redirect("/riwayat");
+  }else{
+    return Astro.redirect("/gagal");
+  }
+}
+---

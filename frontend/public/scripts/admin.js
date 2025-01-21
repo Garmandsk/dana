@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fungsi untuk menampilkan struk di modal
   const modalBody = document.querySelector('.modal-body');
   const tombolTambah = document.querySelector('[data-bs-toggle="modal"]');
-  const jumlahBarang = 9;
+  const jumlahBarangWarung = 9;
   
   tombolTambah.addEventListener('click', () => {
     tampilkanPopup();
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let detail = '';
     let totalBarang = 0;
 
-    for (let i = 1; i <= jumlahBarang; i++) {
+    for (let i = 1; i <= jumlahBarangWarung; i++) {
       const jumlahBarang = parseInt(document.getElementById(`jumlahBarang-${i}`).value) || 0;
       if (jumlahBarang > 0) {
         const [namaBarang, hargaBarang] = tentukanBarang(i);

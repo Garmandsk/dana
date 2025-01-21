@@ -1,13 +1,22 @@
 ---
-const { teksAtas, teksBawah } = Astro.props;
+const { teksAtas, teksBawah, teksBiasa, tambahan, width = "115px" } = Astro.props;
+const formatRupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number);
+};
+
+const nilaiRupiah = formatRupiah(teksBawah);
 ---
 
-<div class="lalu" id="hari-lalu">
+<div class=`lalu ${tambahan}` id="hari-lalu">
   <h6 class="atas">{teksAtas}</h6>
-  <h6 class="bawah">{teksBawah}</h6>
+  <h6 class="bawah">{teksBiasa ? teksBiasa : nilaiRupiah}</h6>
 </div>
 
-<style>
+<style define:vars = {{ width }}>
 
   h6{
     background: white;
@@ -30,7 +39,7 @@ const { teksAtas, teksBawah } = Astro.props;
   #info-total, .lalu .atas{
     color: black;
     margin-bottom: 0;
-    width: 115px;
+    width: var(--width);
   }
   
   #info-total, .lalu .bawah{

@@ -3,8 +3,44 @@ import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import JudulKecil from '../components/JudulKecil.astro';
 import TombolEpik from '../components/TombolEpik.astro';
-import LinkEpik from '../components/LinkEpik.astro';
+import TombolHapus from '../components/TombolHapus.astro';
+import LinkUbah from '../components/LinkUbah.astro';
 import Modal from '../components/Modal.astro';
+const responseRiwayat = await fetch("http://localhost:5000/riwayat");
+const resultRiwayat = await responseRiwayat.json();
+if(resultRiwayat.status != "succes"){
+  console.error("Error, Riwayat Tidak Tersedia");
+}
+// console.log(resultRiwayat);
+const Datas = resultRiwayat.data;
+
+const fetchBarang = async (idRiwayat) => {
+  const response = await fetch("http://localhost:5000/riwayat-barang", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: idRiwayat }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Gagal mengambil data barang');
+  }
+
+  const result = await response.json();
+  return result.data || [];
+};
+
+// Ambil data barang untuk setiap riwayat
+const riwayatBarangData = await Promise.all(
+  Datas.map(async (data) => {
+    const barang = await fetchBarang(data.id);
+    return {
+      riwayatId: data.id,
+      barang,
+    };
+  }));
+// console.log(riwayatBarangData);
 ---
 
 <Layout title="Riwayat">
@@ -14,7 +50,7 @@ import Modal from '../components/Modal.astro';
     <input class="mt-5" id="tombol-cari" name="tombol-cari" 
            type="text" placeholder="Cari">
   </form>
-  
+  {/*
   <JudulKecil tambahan="my-3 text-white"/>
   <div class="container-riwayat ">
     <h2>#1</h2>
@@ -28,47 +64,33 @@ import Modal from '../components/Modal.astro';
     </div>
     
     <div class="container-tombol">
-      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
+      <LinkUbah teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
       <TombolEpik teks="Hapus" width="15vw" />
     </div>
   </div>
-  
-  <JudulKecil tambahan="my-3 text-white"/>
-  <div class="container-riwayat">
-    <h2>#2</h2>
-    
-    <div class="container-barang">
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
+  */}
+  {riwayatBarangData.map(({ riwayatId, barang }) => (
+    <JudulKecil tambahan="my-3 text-white"/>
+    <div class="container-riwayat" key={riwayatId}>
+      <h2>#{riwayatId}</h2>
+
+      <div class="container-barang">
+        {barang.length > 0 ? (
+          barang.map((item) => (
+            <p key={item.id}>{item.nama_barang} X {item.jumlah_barang}</p>
+          ))
+        ) : (
+          <p>Kosong</p> 
+        )}
+      </div>
+
+      <div class="container-tombol">
+        <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${riwayatId}` width="15vw"/>
+        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${riwayatId}` width="15vw" target={riwayatId}/>
+      </div>
     </div>
-    
-    <div class="container-tombol">
-      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
-      <TombolEpik teks="Hapus" width="15vw" />
-    </div>
-  </div>
-  
-  <JudulKecil tambahan="my-3 text-white"/>
-  <div class="container-riwayat ">
-    <h2>#3</h2>
-    
-    <div class="container-barang">
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-      <p>Chocolatos X 1</p>
-    </div>
-    
-    <div class="container-tombol">
-      <LinkEpik teks="Ubah" tujuanLink="/ubahRiwayat" width="15vw"/>
-      <TombolEpik teks="Hapus" width="15vw" />
-    </div>
-  </div>
-  <JudulKecil tambahan="my-3 text-white"/>
+  ))}
+
 </Layout>
 
 <style>

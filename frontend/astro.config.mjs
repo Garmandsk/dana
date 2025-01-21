@@ -11,6 +11,10 @@ export default defineConfig({
   build: {
     inlineStylesheets: `never`,
   },
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover'
+  }
   /*
   site: 'https://www.example.com',
   base: '/docs',

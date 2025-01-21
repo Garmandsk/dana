@@ -1,22 +1,30 @@
 ---
-const a = "jajsn";
 import Layout from '../layouts/Layout.astro';
 import Kolom3 from '../layouts/Kolom3.astro';
 import Header from '../layouts/Header.astro';
 import InfoTotal from '../components/InfoTotal.astro';
 import InfoLalu from '../components/InfoLalu.astro';
 import TombolAdmin from '../components/TombolAdmin.astro';
+
+const response = await fetch("http://localhost:5000/statistik")
+const statistik = await response.json();
+const { total_pendapatan,
+total_pendapatan_hari_ini,
+total_pendapatan_hari_lalu,
+total_pendapatan_minggu_lalu,
+total_pendapatan_bulan_lalu } = statistik[0];
+console.log(statistik);
 ---
 
 <Layout title="Seksi Dana Porseni XVII">
   <Header judulBesar="Seksi Dana Porseni XVII"/>
   <div class="mb-5" id="info">
-    <InfoTotal teksAtas="Total Pendapatan" teksBawah="100.000,00"/>
+    <InfoTotal teksAtas="Total Pendapatan" teksBawah={total_pendapatan}/>
 
     <Kolom3 justifyContent="center" gap="5vw">
-      <InfoLalu teksAtas="Hari Lalu" teksBawah="50.000,00"/>
-      <InfoLalu teksAtas="Minggu Lalu" teksBawah="100.000,00"/>
-      <InfoLalu teksAtas="Bulan Lalu" teksBawah="150.000,00"/>
+      <InfoLalu teksAtas="Hari Lalu" teksBawah={total_pendapatan_hari_lalu}/>
+      <InfoLalu teksAtas="Minggu Lalu" teksBawah={total_pendapatan_minggu_lalu}/>
+      <InfoLalu teksAtas="Bulan Lalu" teksBawah={total_pendapatan_bulan_lalu}/>
     </Kolom3>
   </div>
   

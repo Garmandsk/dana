@@ -1,33 +1,32 @@
 ---
 import Kolom3 from '../layouts/Kolom3.astro';
-const { namaBarang, jumlahBarang, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+const { target, judul, jumlahBarang, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 ---
 
 <form action="" method="POST">
-  <div class="text-dark" id="modal-container" data-id="1">
-    <button type="button" class="btn" id="tombol-tambah" data-bs-toggle="modal" data-bs-target="#modal-${namaBarang}">
+  <div class="text-dark" id="modal-container" data-id={target}>
+    <button type="button" class="btn" id="tombol-tambah" data-bs-toggle="modal" data-bs-target={`#modal-${target}`}>
       Ubah
     </button>
-  
+
     <!-- Modal -->
-    <div class="modal fade" id="modal-${namaBarang}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id={`modal-${target}`} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">{namaBarang}</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">{judul}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <Kolom3 justifyContent="center" gap="2vw">
-              <button class="btn tombol-ubah" data-id="1" type="button" data-change="-1">-</button>
-              <input type="number" id="jumlahBarang-1" class="jumlahBarang" placeholder="0" name="jumlahBarang-1" value={jumlahBarang} min="0">
-              <button class="btn tombol-ubah" data-id="1" type="button" data-change="1">+</button>
+              <button class="btn tombol-ubah" data-id={target} type="button" data-change="-1">-</button>
+              <input type="number" id={`jumlahBarang-${target}`} class="jumlahBarang" placeholder="0" name={`jumlahBarang-${target}`} value={jumlahBarang ?? 0} min="0">
+              <button class="btn tombol-ubah" data-id={target} type="button" data-change="1">+</button>
             </Kolom3>
           </div>
           <div class="modal-footer">
             <button type="button" class="tombol-footer btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             <button class="tombol-footer btn btn-primary" type="submit">Konfirmasi</button>
-            </form>
           </div>
         </div>
       </div>

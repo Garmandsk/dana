@@ -6,7 +6,7 @@ import JudulKecil from '../../components/JudulKecil.astro';
 import TombolEpik from '../../components/TombolEpik.astro';
 import Kotak from '../../components/Kotak.astro';
 import InfoLalu from '../../components/InfoLalu.astro';
-import ModalUbah from '../../components/ModalUbah.astro';
+import TombolUbah from '../../components/TombolUbah.astro';
 import TombolHapus from '../../components/TombolHapus.astro';
 
 const { id = 0 } = Astro.params;
@@ -39,7 +39,7 @@ const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.dat
         <p class="my-auto">9</p>
       </div>
       <div class="container-tombol">
-        <ModalUbah namaBarang="Chocolatos" jumlahBarang="9" width="15vw"/>
+        <TombolUbah namaBarang="Chocolatos" jumlahBarang="9" width="15vw"/>
         <TombolHapus namaBarang="Chocolatos" teks="Chocolatos X 9" width="15vw"/>
       </div>
     </div>
@@ -62,8 +62,8 @@ const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.dat
             <p class="my-auto">{barang.jumlah_barang}</p>
           </div>
           <div class="container-tombol">
-            <ModalUbah namaBarang={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
-            <TombolHapus judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw" target={barang.id}/>
+            <TombolUbah target={barang.id} judul={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
+            <TombolHapus target={barang.id} judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw"/>
           </div>
         </div>
         <Kotak tambahan="my-3"/>
@@ -73,8 +73,8 @@ const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.dat
   
   <InfoLalu teksAtas="Total Harga" teksBawah={total_harga} tambahan="my-auto"/>
   <Kolom2 justifyContent="space-around">
-    <InfoLalu teksAtas="Total Jenis Barang" teksBiasa={total_jenis_barang}/>
-    <InfoLalu teksAtas="Total Jumlah Barang" teksBiasa={total_jumlah_barang}/>
+    <InfoLalu teksAtas="Total Jenis Barang" teksBiasa={total_jenis_barang} width="fit-content"/>
+    <InfoLalu teksAtas="Total Jumlah Barang" teksBiasa={total_jumlah_barang} width="fit-content"/>
   </Kolom2>
 </Layout>
 

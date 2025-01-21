@@ -1,10 +1,10 @@
 ---
 import Kolom3 from '../layouts/Kolom3.astro';
-const { judul = "Hapus", target = "0", teks = "hallo", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+const { judul = "Hapus", target = "0", idRiwayat, idBarang, formPath, teks = "hallo", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 //console.log(judul, target);
 ---
 
-<form action="/hapusRiwayat" method="POST">
+<form action={formPath} method="POST">
   <div class="text-dark" id="modal-container" data-id={target}>
     <!-- Tombol untuk membuka modal -->
     <button 
@@ -44,7 +44,8 @@ const { judul = "Hapus", target = "0", teks = "hallo", width = "fit-content", pa
               Batal
             </button>
             <!-- Input hidden untuk mengirimkan ID -->
-            <input type="hidden" name="idRiwayat" id={`hidden-id-${target}`} value={target} />
+            <input type="hidden" name="idBarang" id={`hidden-id-${idBarang}`} value={idBarang} />
+            <input type="hidden" name="idRiwayat" id={`hidden-id-${idRiwayat}`} value={idRiwayat} />
             <button 
               class="tombol-footer btn btn-primary" 
               type="submit" 

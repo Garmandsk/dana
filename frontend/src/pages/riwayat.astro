@@ -86,7 +86,7 @@ const riwayatBarangData = await Promise.all(
 
       <div class="container-tombol">
         <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${riwayatId}` width="15vw"/>
-        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${riwayatId}` width="15vw" target={riwayatId}/>
+        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${riwayatId}` width="15vw" target={riwayatId} formPath="/hapusRiwayat"/>
       </div>
     </div>
   ))}

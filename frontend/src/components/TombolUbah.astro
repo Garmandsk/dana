@@ -1,9 +1,9 @@
 ---
 import Kolom3 from '../layouts/Kolom3.astro';
-const { target, judul, jumlahBarang, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+const { target = 0, idRiwayat, idBarang, formPath, judul = "Kosong", jumlahBarang = 0, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 ---
 
-<form action="" method="POST">
+<form action={formPath} method="POST">
   <div class="text-dark" id="modal-container" data-id={target}>
     <button type="button" class="btn" id="tombol-tambah" data-bs-toggle="modal" data-bs-target={`#modal-${target}`}>
       Ubah
@@ -26,6 +26,8 @@ const { target, judul, jumlahBarang, width = "fit-content", padding = "8px 8px",
           </div>
           <div class="modal-footer">
             <button type="button" class="tombol-footer btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <input type="hidden" name="idBarang" id={`hidden-id-${idBarang}`} value={idBarang} />
+            <input type="hidden" name="idRiwayat" id={`hidden-id-${idRiwayat}`} value={idRiwayat} />
             <button class="tombol-footer btn btn-primary" type="submit">Konfirmasi</button>
           </div>
         </div>

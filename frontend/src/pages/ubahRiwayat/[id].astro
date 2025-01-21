@@ -25,9 +25,9 @@ const resultTotal = await responseTotal.json();
 if(resultTotal.data[0] === undefined){
   return Astro.redirect("/error");
 }
-// console.log(resultTotal);
+console.log(resultTotal);
 const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.data[0];
-  //console.log(total_jenis_barang);
+  console.log("Total Jenis Barang: ", total_jenis_barang);
 ---
 
 {/*
@@ -62,8 +62,8 @@ const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.dat
             <p class="my-auto">{barang.jumlah_barang}</p>
           </div>
           <div class="container-tombol">
-            <TombolUbah target={barang.id} judul={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
-            <TombolHapus target={barang.id} judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw"/>
+            <TombolUbah formPath="/ubahBarang" target={barang.id} idRiwayat={id} idBarang={barang.id} judul={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
+            <TombolHapus formPath="/hapusBarang" target={barang.id} idRiwayat={id} idBarang={barang.id} judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw"/>
           </div>
         </div>
         <Kotak tambahan="my-3"/>

@@ -1,0 +1,18 @@
+---
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const idRiwayat = formData.get("idRiwayat");
+  const idBarang = formData.get("idBarang");
+  const responseHapusBarang = await fetch(`http://localhost:5000/barang-hapus/${idBarang}`, {
+    method: "DELETE",
+  });
+  
+  const resultHapusBarang = await responseHapusBarang.json();
+  console.log(resultHapusBarang);
+  if(resultHapusBarang.status === "succes"){
+    return Astro.redirect(`/ubahRiwayat/${idRiwayat}`);
+  }else{
+    return Astro.redirect("/gagal");
+  }
+}
+---

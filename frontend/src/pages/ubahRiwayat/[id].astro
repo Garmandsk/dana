@@ -62,7 +62,7 @@ const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.dat
             <p class="my-auto">{barang.jumlah_barang}</p>
           </div>
           <div class="container-tombol">
-            <TombolUbah formPath="/ubahBarang" target={barang.id} idRiwayat={id} idBarang={barang.id} judul={barang.nama_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
+            <TombolUbah formPath="/ubahBarang" target={barang.id} idRiwayat={id} idBarang={barang.id} judul={barang.nama_barang} hargaBarang={barang.harga_barang} jumlahBarang={barang.jumlah_barang} width="15vw"/>
             <TombolHapus formPath="/hapusBarang" target={barang.id} idRiwayat={id} idBarang={barang.id} judul="Hapus Barang ?" teks=`${barang.nama_barang} X ${barang.jumlah_barang}` width="15vw"/>
           </div>
         </div>

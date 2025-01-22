@@ -2,15 +2,23 @@
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   const idRiwayat = formData.get("idRiwayat");  // Ambil idRiwayat dari formData
+  console.log(idRiwayat)
+  if (!idRiwayat) {
+    console.error("ID Riwayat tidak ditemukan: ", idRiwayat);
+    return Astro.redirect("/gagal");
+  }
+
   const responseHapusRiwayat = await fetch(`http://localhost:5000/riwayat-hapus/${idRiwayat}`, {
     method: "DELETE",
   });
-  
+
   const resultHapusRiwayat = await responseHapusRiwayat.json();
   console.log(resultHapusRiwayat);
-  if(resultHapusRiwayat.status === "succes"){
+
+  if (resultHapusRiwayat.status === "success") {
     return Astro.redirect("/riwayat");
-  }else{
+  } else {
+    console.log(resultHapusRiwayat)
     return Astro.redirect("/gagal");
   }
 }

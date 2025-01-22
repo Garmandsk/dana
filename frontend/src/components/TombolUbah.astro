@@ -1,6 +1,6 @@
 ---
 import Kolom3 from '../layouts/Kolom3.astro';
-const { target = 0, idRiwayat, idBarang, formPath, judul = "Kosong", jumlahBarang = 0, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+const { target = 0, idRiwayat, idBarang, formPath, judul = "Kosong", hargaBarang = 0, jumlahBarang = 0, width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
 ---
 
 <form action={formPath} method="POST">
@@ -20,7 +20,7 @@ const { target = 0, idRiwayat, idBarang, formPath, judul = "Kosong", jumlahBaran
           <div class="modal-body">
             <Kolom3 justifyContent="center" gap="2vw">
               <button class="btn tombol-ubah" data-id={target} type="button" data-change="-1">-</button>
-              <input type="number" id={`jumlahBarang-${target}`} class="jumlahBarang" placeholder="0" name={`jumlahBarang-${target}`} value={jumlahBarang ?? 0} min="0">
+              <input type="number" id={`jumlahBarang-${target}`} class="jumlahBarang" placeholder="0" name={`jumlahBarang`} value={jumlahBarang ?? 0} min="0">
               <button class="btn tombol-ubah" data-id={target} type="button" data-change="1">+</button>
             </Kolom3>
           </div>
@@ -28,6 +28,7 @@ const { target = 0, idRiwayat, idBarang, formPath, judul = "Kosong", jumlahBaran
             <button type="button" class="tombol-footer btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             <input type="hidden" name="idBarang" id={`hidden-id-${idBarang}`} value={idBarang} />
             <input type="hidden" name="idRiwayat" id={`hidden-id-${idRiwayat}`} value={idRiwayat} />
+            <input type="hidden" name="hargaBarang" id={`hidden-id-${hargaBarang}`} value={hargaBarang} />
             <button class="tombol-footer btn btn-primary" type="submit">Konfirmasi</button>
           </div>
         </div>

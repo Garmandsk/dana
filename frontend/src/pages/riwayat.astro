@@ -36,7 +36,7 @@ const riwayatBarangData = await Promise.all(
   Datas.map(async (data) => {
     const barang = await fetchBarang(data.id);
     return {
-      riwayatId: data.id,
+      idRiwayat: data.id,
       barang,
     };
   }));
@@ -69,10 +69,10 @@ const riwayatBarangData = await Promise.all(
     </div>
   </div>
   */}
-  {riwayatBarangData.map(({ riwayatId, barang }) => (
+  {riwayatBarangData.map(({ idRiwayat, barang }) => (
     <JudulKecil tambahan="my-3 text-white"/>
-    <div class="container-riwayat" key={riwayatId}>
-      <h2>#{riwayatId}</h2>
+    <div class="container-riwayat" key={idRiwayat}>
+      <h2>#{idRiwayat}</h2>
 
       <div class="container-barang">
         {barang.length > 0 ? (
@@ -85,8 +85,8 @@ const riwayatBarangData = await Promise.all(
       </div>
 
       <div class="container-tombol">
-        <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${riwayatId}` width="15vw"/>
-        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${riwayatId}` width="15vw" target={riwayatId} formPath="/hapusRiwayat"/>
+        <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${idRiwayat}` width="15vw"/>
+        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat} formPath="/hapusRiwayat"/>
       </div>
     </div>
   ))}

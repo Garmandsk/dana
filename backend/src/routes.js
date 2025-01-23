@@ -9,7 +9,7 @@ const routes = [
     path: "/lokasi",
     handler: (request, h) => {
       if(request.location){
-        console.log(request.location)
+        request.logger.info(request.location)
         return `Lokasi Anda: ${request.location}`;
       }else{
         return `Tidak bisa masuk`;
@@ -69,7 +69,13 @@ const routes = [
       const data = {
         nama: "Arman"
       }
+      request.logger.info("Halo Ini route dynamic")
       return h.view("index.hbs", data)
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
     }
   },
   {
@@ -127,12 +133,12 @@ const routes = [
           .select();
   
         if (error) {
-          console.error("Error fetching data:", error);
+          request.logger.error("Error fetching data:", error);
           throw Boom.internal("Gagal mendapatkan data dari database", { error: error.message });
         }
   
         if (data.length > 0) {
-          console.log("Data fetched:", data);
+          //request.logger.info("Data fetched:", data);
           return h.response({
             pesan: "Route Utama",
             data: data,
@@ -148,7 +154,7 @@ const routes = [
         }
   
         // Untuk error tak terduga, buat error internal
-        console.error("Unexpected error:", err);
+        request.logger.error("Unexpected error:", err);
         return Boom.internal("Terjadi kesalahan pada server", { error: err.message });
       }
     },
@@ -174,7 +180,7 @@ const routes = [
         if (error) throw error;
         return data;
       } catch (err) {
-        console.error('Error:', err.message);
+        request.logger.error('Error:', err.message);
       }
     },
     options: {
@@ -195,7 +201,7 @@ const routes = [
           .select("id"); // Ambil id dari record baru
   
         if (error) {
-          console.error("Error inserting:", error);
+          request.logger.error("Error inserting:", error);
           return h.response({ status: "error", message: error.message }).code(500);
         }
   
@@ -205,7 +211,7 @@ const routes = [
           newId: data[0].id,
         }).code(200);
       } catch (err) {
-        console.error("Handler error:", err);
+        request.logger.error("Handler error:", err);
         return h.response({ status: "error", message: err.message }).code(500);
       }
     },
@@ -221,9 +227,9 @@ const routes = [
     handler: async (request, h) => {
       if(request.payload){
         const { newId, namaBarang, jumlahBarang, hargaBarang, subTotal } = request.payload;
-        /* console.log(request.payload); */
+        /* request.logger.info(request.payload); */
         try {
-          const { data, error } = await db.from("barangg").insert({
+          const { data, error } = await db.from("barang").insert({
             id_riwayat: newId,
             nama_barang: namaBarang,
             jumlah_barang: jumlahBarang,
@@ -232,7 +238,7 @@ const routes = [
           });
     
           if (error) {
-            console.error("Error inserting barang:", error);
+            request.logger.error("Error inserting barang:", error.message);
             return h.response({
               status: "fail",
               message: error.message,
@@ -245,7 +251,7 @@ const routes = [
             message: `Barang berhasil ditambahkan`,
           }).code(200);
         } catch (err) {
-          console.error("Handler error:", err);
+          request.logger.error("Handler error:", err);
           return h.response({ status: "error", message: err.message }).code(500);
         }
       }
@@ -267,12 +273,64 @@ const routes = [
     },
   },
   {
+    method: "GET",
+    path: "/total/{id}",
+    handler: async (request, h) => {
+      const { id } = request.params;
+      if (!id) {
+        request.logger.error("Mana Data Id Riwayat");
+        return Boom.badRequest("Mana Data Id Riwayat");
+      }
+      try {
+        const { data, error } = await db
+          .from("total")
+          .select()
+          .eq("id_riwayat", id);
+  
+        if (error) {
+          request.logger.error("Error fetching total: ", error.message);
+          return h.response({
+            status: "fail",
+            message: "Error fetching total",
+            error: error.message,
+          }).code(500); // Menambahkan kode 500 untuk error internal
+        }
+  
+        return h.response({
+          status: "success",
+          message: "Data Total Didapatkan",
+          data,
+        }).code(200);
+      } catch (err) {
+        request.logger.error("Handler Error: ", err);
+        return h.response({
+          status: "fail",
+          message: "Internal server error",
+          error: err.message,
+        }).code(500); // Menambahkan kode 500 untuk error handler
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.number().integer().required(), // Memastikan id wajib ada
+        })
+      }
+    }
+  },
+  {
     method: "POST",
     path: "/tambah-total",
     handler: async (request, h) => {
       if(request.payload){
-        console.log(request.payload);
+        // request.logger.info(request.payload);
         const { newId, totalJenisBarang, totalJumlahBarang, totalHarga } = request.payload;
+        if(!newId || !totalJenisBarang || !totalJumlahBarang || !totalHarga){
+          request.log.error("Mana Datanya woy");
+        }
         try{
           const { error } = await db
           .from("total")
@@ -283,7 +341,7 @@ const routes = [
               total_harga: totalHarga,
           })
           if(error){
-            console.error("Error Inserting Total ", error);
+            request.logger.error("Error Inserting Total ", error);
             return h.response({
               status: "fail",
               message: "Gagal Nambah Total"
@@ -294,7 +352,7 @@ const routes = [
             message: "Total berhasil ditambahkan"
           }).code(200)
         }catch(err){
-          console.error("Handler Error ", err)
+          request.logger.error("Handler Error ", err)
           return Boom.internal("Kesalahan Handler")
         }
       }
@@ -319,7 +377,7 @@ const routes = [
     path: "/test-post",
     handler: async (request, h) => {
       if(request.payload){
-        console.log("Payload diterima:", request.payload);
+        // request.logger.info("Payload diterima:", request.payload);
         return h.response({ status: "success", message: "Data diterima" }).code(200)
       }
       return Boom.notFound();
@@ -334,32 +392,49 @@ const routes = [
     method: "GET",
     path: "/riwayat",
     handler: async (request, h) => {
-      try{
+      try {
+        // Mengambil data dari tabel "riwayat" dan mengurutkan berdasarkan kolom "created_at"
         const { data, error } = await db
           .from("riwayat")
           .select()
-        if(error){
-          console.error("Data Riwayat Tidak dapat diambil")
-          return Boom.notFound();
+          .order("created_at", { ascending: false });
+  
+        // Jika terjadi error saat mengambil data
+        if (error) {
+          request.logger.error("Data Riwayat Tidak Dapat Diambil:", error.message);
+          return Boom.notFound("Data riwayat tidak ditemukan");
         }
-        return h.response({
-          status: "succes",
-          message: "Data Riwayat didapatkan",
-          data,
-        }).code(200);
-      }catch(err){
-        if(err){
-          console.error("Error Handler");
-          Boom.internal("Error Handler");
+  
+        // Jika data berhasil diambil, namun kosong
+        if (!data || data.length === 0) {
+          return h
+            .response({
+              status: "success",
+              message: "Data riwayat kosong",
+              data: [],
+            })
+            .code(200);
         }
+  
+        // Jika data berhasil diambil
+        return h
+          .response({
+            status: "success",
+            message: "Data riwayat didapatkan",
+            data,
+          })
+          .code(200);
+      } catch (err) {
+        // Menangani error tak terduga
+        request.logger.error("Error Handler:", err.message);
+        return Boom.internal("Terjadi kesalahan internal");
       }
-      return "Halaman Riwayat";
     },
     options: {
       auth: {
-        mode: "try"
-      }
-    }
+        mode: "try", // Tidak memaksa autentikasi
+      },
+    },
   },
   {
     method: '*',
@@ -373,7 +448,7 @@ const routes = [
     path: "/riwayat-barang",
     handler: async (request, h) => {
       const { id } = request.payload; // Ambil id dari payload
-      console.log("Payload diterima:", request.payload);
+      // request.logger.info("Payload diterima:", request.payload);
 
       if (!id) {
         return Boom.badRequest("Masukkan ID riwayat.");
@@ -383,11 +458,11 @@ const routes = [
         const { data, error } = await db.rpc("get_barang_by_riwayat", { riwayat_id: id });
 
         if (error) {
-          console.error("Error fetching data:", error.message);
+          request.logger.error("Error fetching data:", error.message);
           return Boom.badRequest(error.message);
         }
 
-        console.log("Data berhasil diambil:", data);
+        // request.logger.info("Data berhasil diambil:", data);
 
         // Kembalikan data ke client
         return h.response({
@@ -396,7 +471,7 @@ const routes = [
         }).code(200);
 
       } catch (err) {
-        console.error("Error handler:", err.message);
+        request.logger.error("Error handler:", err.message);
         return Boom.internal("Terjadi kesalahan pada server.");
       }
     },
@@ -406,10 +481,184 @@ const routes = [
       },
       validate: {
         payload: Joi.object({
-          id: Joi.number().integer().required(), // Validasi payload harus ada id dan berupa integer
+          id: Joi.number().integer().required()
         }),
       },
     },
+  },
+  {
+    method: "GET",
+    path: "/riwayat-barang/{id}",
+    handler: async (request, h) => {
+      const { id } = request.params; // Ambil id dari payload
+      // request.logger.info("Payload diterima:", request.payload);
+
+      if (!id) {
+        return Boom.badRequest("Masukkan ID riwayat.");
+      }
+
+      try {
+        const { data, error } = await db.rpc("get_barang_by_riwayat", { riwayat_id: id });
+
+        if (error) {
+          request.logger.error("Error fetching data:", error.message);
+          return Boom.badRequest(error.message);
+        }
+
+        //request.logger.info("Data berhasil diambil:", data);
+
+        // Kembalikan data ke client
+        return h.response({
+          status: "success",
+          data: data,
+        }).code(200);
+
+      } catch (err) {
+        request.logger.error("Error handler:", err.message);
+        return Boom.internal("Terjadi kesalahan pada server.");
+      }
+    },
+    options: {
+      auth: {
+        mode: "try",
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.number().integer().required()
+        }),
+      },
+    },
+  },
+  {
+    method: 'DELETE',
+    path: '/riwayat-hapus/{idRiwayat}',
+    handler: async (request, h) => {
+      const { idRiwayat } = request.params;
+  
+      if (!idRiwayat) {
+        return Boom.badRequest('ID Riwayat tidak ditemukan');
+      }
+  
+      try {
+        const { error } = await db.from('riwayat').delete().eq('id', idRiwayat);
+        if (error) {
+          request.logger.error("Error Delete Riwayat: ", error.message);
+          return h.response({
+            status: "error",
+            message: "Gagal menghapus riwayat",
+            detail: error.message,
+          }).code(500);
+        }
+  
+        request.logger.info("Riwayat Berhasil Dihapus");
+        return h.response({ status: "success", message: 'Riwayat berhasil dihapus' }).code(200);
+  
+      } catch (err) {
+        request.logger.error("Error Handler: ", err.message);
+        return h.response({
+          status: "error",
+          message: "Terjadi kesalahan pada server",
+          detail: err.message,
+        }).code(500);
+      }
+    },
+    options: {
+      auth: { mode: 'try' },
+      validate: {
+        params: Joi.object({
+          idRiwayat: Joi.number().integer().required(),
+        }),
+      },
+    },
+  },
+  {
+    method: "PUT",
+    path: "/barang-ubah/{idBarang}",
+    handler: async (request, h) => {
+      const { idBarang } = request.params;
+      const { hargaBarang, jumlahBarang } = request.payload;
+      if(!idBarang || !hargaBarang || !jumlahBarang){
+        request.logger.error("Masukkan Data Id, Harga Barang, dan Jumlah Barang")
+        return Boom.badRequest("Masukkan Data Id, harga barang, Dan Jumlah Barang")
+      }
+      const subTotal = hargaBarang * jumlahBarang;
+      try{
+        const { error } = await db
+          .from("barang")
+          .update({jumlah_barang: jumlahBarang, sub_total: subTotal})
+          .eq("id", idBarang)
+        if(error){
+          request.logger.error("Error Update Barang: ", error.message)
+          return Boom.internal("Error update Barang: ", error.message)
+        }
+        request.logger.info("Update Barang Berhasil")
+        return h 
+          .response({
+            status: "success",
+            message: "Data Barang Berhasil diubah"
+          }).code(200)
+      }catch(err){
+        if(err){
+          request.logger.error("Handler Error: ", err.message)
+          return Boom.internal("Handler Error: ", err.message)
+        }
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        params: Joi.object({
+          idBarang: Joi.string().guid({ version: ['uuidv4'] }).required(),
+        }),
+        payload: Joi.object({
+          hargaBarang: Joi.number().integer().required(),
+          jumlahBarang: Joi.number().integer().required().min(1).max(100)
+        })
+      }
+    }
+  },
+  {
+    method: "DELETE",
+    path: "/barang-hapus/{idBarang}",
+    handler: async (request, h) => {
+      const { idBarang } = request.params;
+      if(!idBarang){
+        return Boom.badRequest("Mana Data Id Barang");
+      }
+      try{
+        const { error } = await db
+          .from("barang")
+          .delete()
+          .eq("id", idBarang)
+        if(error){
+          request.logger.error("Gagal Menghapus Barang: ", error.message);
+          return Boom.internal("Gagal menghapus Barang: ", error.message)
+        }
+        return h
+          .response(
+            {
+              status: "succes",
+              message: "Barang berhasil dihapus"
+            }).code(200)
+      }catch(err){
+        if(err){
+          request.logger.error("Handler Error")
+          return Boom.internal("Handler Error")
+        }
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        params: Joi.object({
+          idBarang: Joi.string().guid({ version: ['uuidv4'] }).required(),
+        })
+      }
+    }
   },
   {
     method: "GET",

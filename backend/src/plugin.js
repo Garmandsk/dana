@@ -4,6 +4,7 @@ const Vision = require("@hapi/vision");
 const hapiDevError = require('hapi-dev-errors');
 const Basic = require("@hapi/basic");
 const Cookie = require("@hapi/cookie");
+const loggerPino = require("./logger.js");
 
 const plugin = [
   {
@@ -30,6 +31,12 @@ const plugin = [
   },
   {
     plugin: Cookie
+  },
+  {
+    plugin: require('hapi-pino'),
+    options: {
+      instance: loggerPino, // Gunakan logger kustom di sini
+    }
   }
 ];
 

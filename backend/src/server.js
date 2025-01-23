@@ -96,7 +96,8 @@ const init = async () => {
 
   // Menjalankan server
   await server.start();
-  console.log(`Server berjalan pada ${server.info.uri}`);
+  server.logger.info(`Server berjalan pada ${server.info.uri}`);
+  server.log(['subsystem'], 'third way for accessing it')
 };
 
 // Menangani error

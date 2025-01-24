@@ -6,6 +6,7 @@ import TombolEpik from '../components/TombolEpik.astro';
 import TombolHapus from '../components/TombolHapus.astro';
 import LinkUbah from '../components/LinkUbah.astro';
 import Modal from '../components/Modal.astro';
+
 const responseRiwayat = await fetch("http://localhost:5000/riwayat");
 const resultRiwayat = await responseRiwayat.json();
 if(resultRiwayat.status != "succes"){
@@ -47,9 +48,10 @@ const riwayatBarangData = await Promise.all(
   <HeaderAdmin judul="Riwayat" tujuanLink="/admin" />
   
   <form action="" method="POST">
-    <input class="mt-5" id="tombol-cari" name="tombol-cari" 
+    <input class="mt-5" id="input" name="input" 
            type="text" placeholder="Cari">
   </form>
+  <JudulKecil tambahan="my-3 text-white"/>
   {/*
   <JudulKecil tambahan="my-3 text-white"/>
   <div class="container-riwayat ">
@@ -69,29 +71,43 @@ const riwayatBarangData = await Promise.all(
     </div>
   </div>
   */}
-  {riwayatBarangData.map(({ idRiwayat, barang }) => (
-    <JudulKecil tambahan="my-3 text-white"/>
-    <div class="container-riwayat" key={idRiwayat}>
-      <h2>#{idRiwayat}</h2>
-
-      <div class="container-barang">
-        {barang.length > 0 ? (
-          barang.map((item) => (
-            <p key={item.id}>{item.nama_barang} X {item.jumlah_barang}</p>
-          ))
-        ) : (
-          <p>Kosong</p> 
-        )}
+  
+  <div id="container">
+    {riwayatBarangData.map(({ idRiwayat, barang }) => (
+      <div class="container-riwayat" key={idRiwayat}>
+        <h2>#{idRiwayat}</h2>
+  
+        <div class="container-barang">
+          {barang.length > 0 ? (
+            barang.map((item) => (
+              <p key={item.id}>{item.nama_barang} X {item.jumlah_barang}</p>
+            ))
+          ) : (
+            <p>Kosong</p> 
+          )}
+        </div>
+  
+        <div class="container-tombol">
+          <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${idRiwayat}` width="15vw"/>
+          <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat} formPath="/hapusRiwayat"/>
+        </div>
       </div>
-
-      <div class="container-tombol">
-        <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${idRiwayat}` width="15vw"/>
-        <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat} formPath="/hapusRiwayat"/>
-      </div>
-    </div>
-  ))}
+      <JudulKecil tambahan="my-3 text-white"/>
+    ))}
+  </div>
 
 </Layout>
+
+
+<script>
+  import jquery from 'jquery';
+  
+  $(document).ready(() => {
+    $("#input").on("keyup", () => {
+      
+    })
+  })
+</script>
 
 <style>
   /* Menempatkan form di tengah halaman */

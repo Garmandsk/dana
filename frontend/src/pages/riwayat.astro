@@ -1,7 +1,5 @@
 ---
 import { Picture, Image } from 'astro:assets';
-import roketLoader from '../assets/roketLoader.svg';
-import astro from '../assets/astro.svg';
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import JudulKecil from '../components/JudulKecil.astro';
@@ -12,7 +10,7 @@ import Modal from '../components/Modal.astro';
 
 const responseRiwayat = await fetch("http://localhost:5000/riwayat");
 const resultRiwayat = await responseRiwayat.json();
-if(resultRiwayat.status != "succes"){
+if(resultRiwayat.status != "success"){
   console.error("Error, Riwayat Tidak Tersedia");
 }
 // console.log(resultRiwayat);
@@ -76,9 +74,9 @@ const riwayatBarangData = await Promise.all(
   </form>
   <JudulKecil tambahan="my-3 text-white"/>
   
-  <Picture src={roketLoader} formats={["svg", "avif", "webp"]} alt="Loader."/>
-  <Image src={astro} alt="Loader."/>
-  <img src="/images/roketLoader.svg" alt="loader">
+  <div id="loader">
+    <h4 class="mx-auto" id="loading">Loading....</h4>
+  </div>
   
   <div id="container">
     {riwayatBarangData.map(({ idRiwayat, barang }) => (
@@ -112,7 +110,9 @@ const riwayatBarangData = await Promise.all(
 
   $(document).ready(() => {
     $("#input").on("keyup", function () {
-      console.log($(this).val()); // Tes input
+      //console.log($(this).val()); // Tes input
+      $("loading").show();
+      
     });
   });
 </script>
@@ -173,5 +173,12 @@ const riwayatBarangData = await Promise.all(
     gap: 30px;
   }
   
-  
+  #loading{
+    width: fit-content;
+    display:none;
+    color:white;
+    display:grid
+    place-items: center;
+    border:1px solid white;
+  }
 </style>

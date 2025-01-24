@@ -1,4 +1,7 @@
 ---
+import { Picture, Image } from 'astro:assets';
+import roketLoader from '../assets/roketLoader.svg';
+import astro from '../assets/astro.svg';
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import JudulKecil from '../components/JudulKecil.astro';
@@ -44,15 +47,7 @@ const riwayatBarangData = await Promise.all(
 // console.log(riwayatBarangData);
 ---
 
-<Layout title="Riwayat">
-  <HeaderAdmin judul="Riwayat" tujuanLink="/admin" />
-  
-  <form action="" method="POST">
-    <input class="mt-5" id="input" name="input" 
-           type="text" placeholder="Cari">
-  </form>
-  <JudulKecil tambahan="my-3 text-white"/>
-  {/*
+{/*
   <JudulKecil tambahan="my-3 text-white"/>
   <div class="container-riwayat ">
     <h2>#1</h2>
@@ -71,6 +66,19 @@ const riwayatBarangData = await Promise.all(
     </div>
   </div>
   */}
+
+<Layout title="Riwayat">
+  <HeaderAdmin judul="Riwayat" tujuanLink="/admin" />
+  
+  <form action="" method="POST">
+    <input class="mt-5" id="input" name="input" 
+           type="text" placeholder="Cari">
+  </form>
+  <JudulKecil tambahan="my-3 text-white"/>
+  
+  <Picture src={roketLoader} formats={["svg", "avif", "webp"]} alt="Loader."/>
+  <Image src={astro} alt="Loader."/>
+  <img src="/images/roketLoader.svg" alt="loader">
   
   <div id="container">
     {riwayatBarangData.map(({ idRiwayat, barang }) => (
@@ -100,13 +108,13 @@ const riwayatBarangData = await Promise.all(
 
 
 <script>
-  import jquery from 'jquery';
-  
+  import $ from 'jquery';
+
   $(document).ready(() => {
-    $("#input").on("keyup", () => {
-      
-    })
-  })
+    $("#input").on("keyup", function () {
+      console.log($(this).val()); // Tes input
+    });
+  });
 </script>
 
 <style>
@@ -117,7 +125,7 @@ const riwayatBarangData = await Promise.all(
   }
 
   /* Styling untuk input */
-  #tombol-cari {
+  #input {
     width: 200px; /* Panjang input */
     height:35px;
     padding: 10px; /* Jarak teks dari tepi */
@@ -128,7 +136,7 @@ const riwayatBarangData = await Promise.all(
   }
 
   /* Tambahkan hover effect (opsional) */
-  #tombol-cari:hover {
+  #input:hover {
     border-color: #6578B2; /* Warna border saat dihover */
   }
   

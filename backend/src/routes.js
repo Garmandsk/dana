@@ -437,6 +437,67 @@ const routes = [
     },
   },
   {
+    method: "GET",
+    path: "/cari-riwayat",
+    handler: async (request, h) => {
+      const { input } = request.query;
+      if (!input) {
+        request.logger.error("Berikan Input Untuk Jquery");
+        return Boom.badRequest("Berikan Input Untuk Jquery");
+      }
+      
+      console.log("Input: ", input);
+  
+      try {
+        // Gunakan .like() untuk filter LIKE di Supabase
+        const { data, error } = await db
+          .from("riwayat")
+          .select()
+          .eq("id", input);
+          //.like("CAST(id AS TEXT)", `%${input}%`);
+  
+        // Jika terjadi error saat mengambil data
+        if (error) {
+          request.logger.error("Data Riwayat Tidak Dapat Diambil:", error.message);
+          return Boom.notFound("Data riwayat tidak ditemukan");
+        }
+  
+        // Jika data berhasil diambil, namun kosong
+        if (!data || data.length === 0) {
+          return h
+            .response({
+              status: "success",
+              message: "Data riwayat kosong",
+              data: [],
+            })
+            .code(200);
+        }
+  
+        // Jika data berhasil diambil
+        return h
+          .response({
+            status: "success",
+            message: "Data riwayat didapatkan",
+            data,
+          })
+          .code(200);
+      } catch (err) {
+        request.logger.error("Handler Error:", err.message);
+        return Boom.internal("Handler Error");
+      }
+    },
+    options: {
+      auth: {
+        mode: "try",
+      },
+      validate: {
+        query: Joi.object({
+          input: Joi.number().integer().required(),
+        }),
+      },
+    },
+  },
+  {
     method: '*',
     path: '/riwayat',
     handler: (request, h) => {
@@ -444,11 +505,84 @@ const routes = [
     },
   },
   {
-    method: "POST",
+    method: "GET",
     path: "/riwayat-barang",
     handler: async (request, h) => {
-      const { id } = request.payload; // Ambil id dari payload
-      // request.logger.info("Payload diterima:", request.payload);
+      const { input } = request.query;
+  
+      if (!input) {
+        request.logger.error("Berikan Input Pencarian");
+        return Boom.badRequest("Berikan Input Pencarian");
+      }
+  
+      try {
+        let query;
+        if (isNaN(input)) {
+          // Jika input adalah string, gunakan ilike untuk mencocokkan nama_barang
+          query = db
+            .from("barang")
+            .select("id_riwayat, id, nama_barang, jumlah_barang")
+            .ilike("nama_barang", `%${input}%`);
+        } else {
+          // Jika input adalah angka, gunakan eq untuk mencocokkan id_riwayat
+          query = db
+            .from("barang")
+            .select("id_riwayat, id, nama_barang, jumlah_barang")
+            .eq("id_riwayat", input);
+        }
+  
+        const { data, error } = await query;
+  
+        if (error) {
+          request.logger.error(`Error saat mengambil data: ${error.message}`);
+          return Boom.internal(`Gagal mengambil data: ${error.message}`);
+        }
+  
+        // Struktur data yang diinginkan
+        const result = data.reduce((acc, item) => {
+          // Cek apakah riwayat sudah ada di accumulator
+          const riwayatIndex = acc.findIndex((riwayat) => riwayat.id_riwayat === item.id_riwayat);
+          if (riwayatIndex === -1) {
+            // Jika riwayat belum ada, tambahkan ke accumulator
+            acc.push({
+              id_riwayat: item.id_riwayat,
+              barang: [{ id_barang: item.id, nama_barang: item.nama_barang, jumlah_barang: item.jumlah_barang }],
+            });
+          } else {
+            // Jika riwayat sudah ada, tambahkan barang ke riwayat yang sesuai
+            acc[riwayatIndex].barang.push({
+              id_barang: item.id,
+              nama_barang: item.nama_barang,
+              jumlah_barang: item.jumlah_barang,
+            });
+          }
+          return acc;
+        }, []);
+  
+        return h
+          .response({
+            status: "success",
+            message: result.length > 0 ? "Data berhasil diambil" : "Data tidak ditemukan",
+            data: result,
+          })
+          .code(200);
+      } catch (err) {
+        request.logger.error(`Handler Error: ${err.message}`);
+        return Boom.internal("Handler Error");
+      }
+    },
+    options: {
+      auth: {
+        mode: "try",
+      },
+    },
+  },
+  {
+    method: "GET",
+    path: "/riwayat-barang/{id}",
+    handler: async (request, h) => {
+      const { id } = request.params; // Ambil id dari params
+      // request.logger.info("Params diterima:", request.params);
 
       if (!id) {
         return Boom.badRequest("Masukkan ID riwayat.");
@@ -480,55 +614,13 @@ const routes = [
         mode: "try",
       },
       validate: {
-        payload: Joi.object({
-          id: Joi.number().integer().required()
-        }),
-      },
-    },
-  },
-  {
-    method: "GET",
-    path: "/riwayat-barang/{id}",
-    handler: async (request, h) => {
-      const { id } = request.params; // Ambil id dari payload
-      // request.logger.info("Payload diterima:", request.payload);
-
-      if (!id) {
-        return Boom.badRequest("Masukkan ID riwayat.");
-      }
-
-      try {
-        const { data, error } = await db.rpc("get_barang_by_riwayat", { riwayat_id: id });
-
-        if (error) {
-          request.logger.error("Error fetching data:", error.message);
-          return Boom.badRequest(error.message);
-        }
-
-        //request.logger.info("Data berhasil diambil:", data);
-
-        // Kembalikan data ke client
-        return h.response({
-          status: "success",
-          data: data,
-        }).code(200);
-
-      } catch (err) {
-        request.logger.error("Error handler:", err.message);
-        return Boom.internal("Terjadi kesalahan pada server.");
-      }
-    },
-    options: {
-      auth: {
-        mode: "try",
-      },
-      validate: {
         params: Joi.object({
           id: Joi.number().integer().required()
         }),
       },
     },
   },
+  
   {
     method: 'DELETE',
     path: '/riwayat-hapus/{idRiwayat}',

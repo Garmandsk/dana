@@ -528,7 +528,7 @@ const routes = [
           query = db
             .from("barang")
             .select("id_riwayat, id, nama_barang, jumlah_barang")
-            .eq("id_riwayat", input);
+            .eq("id_riwayat", input)
         }
   
         const { data, error } = await query;
@@ -538,7 +538,6 @@ const routes = [
           return Boom.internal(`Gagal mengambil data: ${error.message}`);
         }
   
-        // Struktur data yang diinginkan
         const result = data.reduce((acc, item) => {
           // Cek apakah riwayat sudah ada di accumulator
           const riwayatIndex = acc.findIndex((riwayat) => riwayat.id_riwayat === item.id_riwayat);
@@ -558,6 +557,9 @@ const routes = [
           }
           return acc;
         }, []);
+        
+        // Urutkan hasil berdasarkan id_riwayat dari yang terbesar ke terkecil
+        result.sort((a, b) => b.id_riwayat - a.id_riwayat);
   
         return h
           .response({

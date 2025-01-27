@@ -1,8 +1,8 @@
 ---
-const { teks = "Halo", width = "fit-content", padding = "8px 8px", tambahan } = Astro.props;
+const { teks = "Halo", width = "fit-content", padding = "8px 8px", id, tambahan } = Astro.props;
 ---
 
-<button class=`btn ${tambahan}` type="button">{teks}</button>
+<button class=`btn ${tambahan}` id={id} type="button">{teks}</button>
   
 <style define:vars={{ width, padding }}>
     

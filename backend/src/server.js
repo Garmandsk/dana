@@ -1,13 +1,17 @@
+require("dotenv").config();
 const path = require("path");
 const Hapi = require('@hapi/hapi');
+const SocketIO = require('socket.io');
 const routes = require("./routes");
 const plugin = require("./plugin")
 const db = require("./db.js");
 
+const { PORT, HOST } = process.env;
+
 const init = async () => {
   const server = Hapi.server({
-    port: 5000,
-    host: "localhost",
+    port: PORT,
+    host: HOST,
     // tanpa cors kita tidak dapat menyimpan data dari frontend yang deploy
     /* routes: {
       cors: {
@@ -26,6 +30,23 @@ const init = async () => {
   
   await server.register(plugin)
   
+  const io = new SocketIO.Server(server.listener, {
+    cors: {
+      origin: "*", // Ganti dengan alamat frontend, jika ada
+      methods: ["GET", "POST"],
+    },
+  });
+
+let nilai = 0;
+  io.on("connection", (socket) => {
+    console.log("Client connected");
+
+    socket.on("tambah", () => {
+      nilai++;
+      io.sockets.emit("penghitung", nilai)
+    });
+  });
+
   const users = {
     Arman: {
       id: 0,
@@ -97,7 +118,7 @@ const init = async () => {
   // Menjalankan server
   await server.start();
   server.logger.info(`Server berjalan pada ${server.info.uri}`);
-  server.log(['subsystem'], 'third way for accessing it')
+  server.log(['subsystem'], 'third way for accessing it');
 };
 
 // Menangani error

@@ -1,6 +1,6 @@
 const pino = require("pino");
+const { PINO_LOGGER_TOKEN } = process.env;
 
-const token = "qSXQoSdJFYyri5nZmXpEqsZX";
 const logger = pino(
   {
     transport: {
@@ -15,7 +15,7 @@ const logger = pino(
         },
         {
           target: "@logtail/pino",
-          options: { sourceToken: token },
+          options: { sourceToken: PINO_LOGGER_TOKEN },
         },
       ],
     },

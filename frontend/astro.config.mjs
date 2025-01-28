@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +14,14 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'hover'
+  },
+  env: {
+    schema: {
+      API_URL_HAPI: envField.string({ context: "client", access: "public", optional: true }),
+      /* API_PORT_HAPI: envField.number({ context: "server", access: "public", default: 5000 }),
+      API_HOST_HAPI: envField.string({ context: "server", access: "public", default: "localhost" }),
+      API_SECRET: envField.string({ context: "server", access: "secret" }), */
+    }
   }
   /*
   site: 'https://www.example.com',

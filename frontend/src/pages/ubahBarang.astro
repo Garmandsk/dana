@@ -1,11 +1,13 @@
 ---
+import { API_URL_HAPI } from "astro:env/client";
+
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   const idRiwayat = formData.get("idRiwayat");
   const idBarang = formData.get("idBarang");
   const hargaBarang = formData.get("hargaBarang");
   const jumlahBarang = formData.get("jumlahBarang");
-  const responseUbahBarang = await fetch(`http://localhost:5000/barang-ubah/${idBarang}`, {
+  const responseUbahBarang = await fetch(`${API_URL_HAPI}/barang-ubah/${idBarang}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

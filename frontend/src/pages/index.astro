@@ -6,8 +6,9 @@ import InfoTotal from '../components/InfoTotal.astro';
 import InfoLalu from '../components/InfoLalu.astro';
 import TombolAdmin from '../components/TombolAdmin.astro';
 import TombolEpik from '../components/TombolEpik.astro';
+import { API_URL_HAPI } from "astro:env/client";
 
-const response = await fetch("http://localhost:5000/statistik")
+const response = await fetch(`${API_URL_HAPI}/statistik`)
 const statistik = await response.json();
 const { total_pendapatan,
 total_pendapatan_hari_ini,
@@ -41,8 +42,10 @@ console.log(statistik);
 <script>
   import $ from 'jquery';
   import { io } from "socket.io-client";
-
-  const socket = io("http://localhost:5000");
+  import { API_URL_HAPI } from "astro:env/client"
+  console.log(API_URL_HAPI);
+  
+  const socket = io(API_URL_HAPI);
 
     socket.on("penghitung", (nilai) => {
       $("#nilai").html(nilai);

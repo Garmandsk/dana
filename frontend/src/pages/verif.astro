@@ -25,15 +25,14 @@ if(Astro.request.method === "POST"){
     //console.log(kataSandiCookie);
     Astro.cookies.set("danaSession",
     kataSandiCookie, {
-      path: "/",
       httpOnly: false, // Jika ingin bisa diakses di frontend
-      secure: false, // Pastikan tidak diaktifkan untuk localhost
-      sameSite: "Lax"
       maxAge: 60 * 60 * 24,
     });
     return Astro.redirect('/admin');
   } else {
     return Astro.redirect('/');
   }
+}else{
+  return Astro.redirect("/");
 }
 ---

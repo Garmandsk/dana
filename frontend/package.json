@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.0.2",
     "astro": "^5.1.7",
     "better-auth": "^1.1.15",
     "jquery": "^3.7.1",

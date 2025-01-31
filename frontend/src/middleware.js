@@ -44,32 +44,36 @@ exports.onRequest = (0, astro_middleware_1.defineMiddleware)(function (context, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, , 7]);
+                _a.trys.push([0, 8, , 10]);
                 console.log("ini middleware");
-                console.log(context);
                 cookies = context.cookies, redirect = context.redirect;
-                if (!cookies.has("danaSession")) return [3 /*break*/, 4];
+                if (!(context.url.pathname === "/" || context.url.pathname === "/verif")) return [3 /*break*/, 2];
+                return [4 /*yield*/, next()];
+            case 1: return [2 /*return*/, _a.sent()];
+            case 2:
+                if (!cookies.has("danaSession")) return [3 /*break*/, 6];
                 cookie = cookies.get("danaSession").value;
                 console.log("Cookie Middleware: ", cookie);
                 return [4 /*yield*/, fetch("".concat(client_1.API_URL_HAPI, "/cek-cookie/").concat(cookie))];
-            case 1:
+            case 3:
                 responseCekCookie = _a.sent();
                 return [4 /*yield*/, responseCekCookie.json()];
-            case 2:
+            case 4:
                 resultCekCookie = _a.sent();
                 console.log(resultCekCookie);
                 if (resultCekCookie.status !== "success") {
-                    return [2 /*return*/, redirect("/")];
+                    return [2 /*return*/, redirect("/")]; // Arahkan ke login jika cookie tidak valid
                 }
                 return [4 /*yield*/, next()];
-            case 3: return [2 /*return*/, _a.sent()];
-            case 4: return [2 /*return*/, redirect("/")];
-            case 5: return [3 /*break*/, 7];
-            case 6:
+            case 5: return [2 /*return*/, _a.sent()];
+            case 6: return [2 /*return*/, redirect("/")]; // Arahkan ke login jika cookie tidak ada
+            case 7: return [3 /*break*/, 10];
+            case 8:
                 e_1 = _a.sent();
-                // Handle errors here
-                throw e_1;
-            case 7: return [2 /*return*/];
+                console.error("Error di middleware:", e_1);
+                return [4 /*yield*/, next()];
+            case 9: return [2 /*return*/, _a.sent()];
+            case 10: return [2 /*return*/];
         }
     });
 }); });

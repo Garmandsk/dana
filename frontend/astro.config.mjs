@@ -1,9 +1,15 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
+import { onRequest } from "./src/middleware.ts";
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  middleware: onRequest,
   output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
   compressHTML: true,
   security: {
     checkOrigin: true

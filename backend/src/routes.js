@@ -190,6 +190,79 @@ const routes = [
     }
   },
   {
+    method: "GET",
+    path: "/ambil-cookie",
+    handler: async (request, h) => {
+      try{
+        const { data, error } = await db
+          .from("kuki")
+          .insert({})
+          .select("cookies")
+        if(error){
+          request.logger.error(`Error Mengambil Cookie: ${error.message}`)
+          return Boom.internal(`Error Mengambil Cookie: ${error.message}`)
+        }
+        return h
+          .response({
+            status: "success",
+            message: "Kata Sandi Berhasil Didapatkan",
+            data: data
+          }).code(200)
+      }catch(err){
+        if (err){
+          request.logger.error(`Handler Error: ${err.message}`)
+          return Boom.internal(`Handler Error: ${err.message}`)
+        }
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
+  },
+  {
+    method: "GET",
+    path: "/cek-cookie/{cookie}",
+    handler: async (request, h) => {
+      const { cookie } = request.params;
+      if(!cookie){
+        request.logger.error("Mana Cookie Yang Mau Di Cek")
+        return Boom.badRequest("Mana Cookie Yang Mau Di Cek")
+      }
+      try{
+        const { data, error } = await db
+          .from("kuki")
+          .select("cookies")
+          .match({cookies: cookie})
+        if(error){
+          request.logger.error(`Cookie tidak ditemukan: ${error.message}`)
+          return Boom.notFound(`Cookie Tidak Ditemukan: ${error.message}`)
+        }
+        return h 
+          .response({
+            status: "success",
+            message: "Cookie Ditemukan",
+          }).code(200)
+      }catch(err){
+        if(err){
+          request.logger.error("Handler Error")
+          return Boom.badRequest("Handler Error")
+        }
+      }
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        params: Joi.object({
+          cookie: Joi.string().guid({ version: ['uuidv4'] }).required(),
+        })
+      }
+    }
+  },
+  {
     method: "POST",
     path: "/tambah-riwayat",
     handler: async (request, h) => {

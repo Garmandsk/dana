@@ -1,0 +1,142 @@
+#nilai, #tombol{
+    order:1px solid purple;
+    width:fit-content;
+  }
+  
+  h6{
+    background: white;
+    padding:8px;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  #info-total{
+    text-align:center
+    display:grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    justify-items: center;
+  }
+  
+  #info-total, .lalu .atas{
+    color: black;
+    margin-bottom: 0;
+  }
+  
+  #info-total, .lalu .bawah{
+    color: #511F82;
+    margin-top: 0;
+  }
+  
+  @property --angle{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+  
+  h6::after, h6::before{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 105%;
+    background-image: conic-gradient(
+    from var(--angle),
+    #3245ff,
+    #bc52ee,
+    #9c27b0,
+    #3245ff
+    );
+    top:50%;
+    left:50%;
+    translate: -50% -50%;
+    z-index: -1;
+    padding: 30px;
+    border-radius: 10px;
+    animation: 3s spin linear infinite;
+  }
+  
+  h6::before{
+    filter: blue(1.5rem);
+    opacity: 0.5;
+  }
+  
+  @keyframes spin{
+    from{
+      --angle: 0deg;
+    }to{
+      --angle: 360deg;
+    }
+  }
+  
+  .btn {
+    text-align:center;
+    height:fit-content;
+    width: fit-content;
+    padding: 8px 8px;
+    border: none;
+    outline: none;
+    color: #FFF;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 12px;
+    display:grid;
+    place-items:center;
+    font-size:15px;
+  }
+
+.btn::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+/* glow */
+.btn::before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #FF0000, #FF7300, #FFFB00, #48FF00,
+    #00FFD5, #002BFF, #FF00C8, #FF0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 4px);
+  height:  calc(100% + 4px);
+  filter: blur(8px);
+  animation: glowing 20s linear infinite;
+  transition: opacity .3s ease-in-out;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+@keyframes glowing {
+  0% {background-position: 0 0;}
+  50% {background-position: 400% 0;}
+  100% {background-position: 0 0;}
+}
+
+/* hover */
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active:after {
+  background: transparent;
+}
+
+.btn:active {
+  color: #000;
+  font-weight: bold;
+}

@@ -1,52 +1,40 @@
 ---
 const { teks } = Astro.props;
-const kataSandiBenar = "halo";
 ---
 
-<!-- Button trigger modal -->
-<div id="modal-container" data-password={kataSandiBenar}>
-  <button type="button" class="btn btn-primary mt-5" id="tombolModal" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    {teks}
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Buktikan!</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input id="kataSandi" class="w-100" type="text" placeholder="Kata Sandi">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <a id="tombolMasuk" class="btn" style="color:white;" href="#" role="button">Masuk</a>
+<form action="/verif" method="POST">
+  <!-- Button trigger modal -->
+  <div id="modal-container" data-password="">
+    <button type="button" class="btn btn-primary mt-5" id="tombolModal" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      {teks}
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Buktikan!</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input id="kataSandi" class="w-100" type="text" name="kataSandi" placeholder="Kata Sandi">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button 
+              id="tombolMasukAdmin"
+              class="btn text-white" 
+              type="submit" 
+            >
+              Masuk
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<script>
-  document.getElementById('tombolMasuk').addEventListener('click', () => {
-    
-    const kataSandi = document.getElementById('kataSandi').value;
-
-    const validPassword = document.getElementById('modal-container').dataset.password;
-
-    if (kataSandi) {
-      if (kataSandi === validPassword) {
-        window.location.href = '/admin';
-      } else {
-        alert('Kata sandi salah!');
-      }
-    } else {
-      alert('Kata sandi harus diisi!');
-    }
-  });
-</script>
+</form>
 
 <style>
 	

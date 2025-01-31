@@ -10,6 +10,31 @@ import InfoLalu from '../components/InfoLalu.astro';
 import '../styles/admin.css';
 import { API_URL_HAPI } from "astro:env/client";
 
+/*if (Astro.cookies.has('counter')) {
+  const cookie = Astro.cookies.get('counter')
+  const value = cookie?.number()
+  if (value !== undefined && !isNaN(value)) counter = value + 1
+*/
+
+
+if (Astro.cookies.has('danaSession')) {
+  //console.log(Astro.cookies);
+  const cookie = Astro.cookies.get('danaSession').value;
+  console.log("Cookie Frontmatter: ", cookie)
+  
+  /*
+  const responseCekCookie = await fetch(`${API_URL_HAPI}/cek-cookie/${cookie}`);
+  const resultCekCookie = await responseCekCookie.json();
+  
+  console.log(cookie, " ", resultCekCookie);
+  if (resultCekCookie.status !== "success"){
+    return Astro.redirect("/");
+  }
+}else{
+  return Astro.redirect("/");
+  */
+}
+
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
 

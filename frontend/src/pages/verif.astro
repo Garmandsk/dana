@@ -1,0 +1,39 @@
+---
+
+import { API_URL_HAPI } from "astro:env/client";
+
+if(Astro.request.method === "POST"){
+  const formData = await Astro.request.formData();
+  const kataSandi = formData.get("kataSandi");
+  const kataSandiBenar = "halo"
+  console.log("Kata Sandi: ", kataSandi);
+  
+  if (kataSandi && kataSandi === kataSandiBenar) {
+    const responseKataSandiCookie = await fetch(`${API_URL_HAPI}/ambil-cookie`);
+    const resultKataSandiCookie = await responseKataSandiCookie.json()
+    
+    /*
+    {
+      status: 'success',
+      message: 'Kata Sandi Berhasil Didapatkan',
+      data: [ { cookies: 'ba27e473-315d-4a6f-ab2d-fe809fe7acfe' } ]
+    }
+    */
+    console.log(resultKataSandiCookie);
+    
+    const kataSandiCookie = resultKataSandiCookie.data[0].cookies;
+    //console.log(kataSandiCookie);
+    Astro.cookies.set("danaSession",
+    kataSandiCookie, {
+      path: "/",
+      httpOnly: false, // Jika ingin bisa diakses di frontend
+      secure: false, // Pastikan tidak diaktifkan untuk localhost
+      sameSite: "Lax"
+      maxAge: 60 * 60 * 24,
+    });
+    return Astro.redirect('/admin');
+  } else {
+    return Astro.redirect('/');
+  }
+}
+---

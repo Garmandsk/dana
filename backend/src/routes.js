@@ -50,6 +50,7 @@ const routes = [
         password
       }
       if(username === "arman" && password === "1234") {
+        console.log(username, password)
         request.cookieAuth.set(data);
         /* return h.view("akun.hbs", data) */
         return ` Halo ${request.auth.credentials.username} `;
@@ -106,6 +107,7 @@ const routes = [
       },
     }
   },
+  /*
   {
     method: "GET",
     path: "/login-basic",
@@ -123,6 +125,7 @@ const routes = [
       return Boom.unauthorized("Logout Berhasil");
     }
   },
+  */
   {
     method: "GET",
     path: "/",
@@ -191,22 +194,80 @@ const routes = [
   },
   {
     method: "GET",
-    path: "/ambil-cookie",
+    path: "/b-cookie/{KATA_SANDI}",
+    handler: (request, h) => {
+      const { KATA_SANDI } = request.params;
+      console.log(KATA_SANDI)
+      if(!KATA_SANDI || KATA_SANDI !== "halo"){
+        return Boom.badRequest("Kata Sandi tidak valid");
+      }
+      const data = {
+        KATA_SANDI
+      }
+      request.logger.warn(`Data: ${data}, Auth: ${request.auth}`);
+      request.cookieAuth.set(data)
+      request.auth.isAuthenticated = true;
+      request.auth.isAuthorized = true;
+      return h.redirect("http://localhost:4321/admin")
+    },
+    options: {
+      auth: {
+        mode: "try"
+      },
+      validate: {
+        params: Joi.object({
+          KATA_SANDI: Joi.string().required()
+        })
+      }
+    }
+  },
+  {
+    method: "GET",
+    path: "/c-cookie",
+    handler: (request, h) => {
+      const { kataSandi } = request.auth.credentials;
+      console.log(kataSandi);
+      request.logger.warn(request.auth);
+      return kataSandi;
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
+  },
+  {
+    method: "GET",
+    path: "/h-cookie",
+    handler: (request, h) => {
+     
+      request.cookieAuth.clear()
+      return "Cookie berhasil dihapus";
+    },
+    options: {
+      auth: {
+        mode: "try"
+      }
+    }
+  },
+  {
+    method: "GET",
+    path: "/ambil-unik",
     handler: async (request, h) => {
       try{
         const { data, error } = await db
-          .from("kuki")
+          .from("unik")
           .insert({})
-          .select("cookies")
+          .select("data_unik")
         if(error){
-          request.logger.error(`Error Mengambil Cookie: ${error.message}`)
-          return Boom.internal(`Error Mengambil Cookie: ${error.message}`)
+          request.logger.error(`Error Mengambil Data Unik: ${error.message}`)
+          return Boom.internal(`Error Mengambil Data Unik: ${error.message}`)
         }
         return h
           .response({
             status: "success",
-            message: "Kata Sandi Berhasil Didapatkan",
-            data: data
+            message: "Data Unik Berhasil Didapatkan",
+            data
           }).code(200)
       }catch(err){
         if (err){
@@ -223,26 +284,26 @@ const routes = [
   },
   {
     method: "GET",
-    path: "/cek-cookie/{cookie}",
+    path: "/cek-unik/{dataUnik}",
     handler: async (request, h) => {
-      const { cookie } = request.params;
-      if(!cookie){
-        request.logger.error("Mana Cookie Yang Mau Di Cek")
-        return Boom.badRequest("Mana Cookie Yang Mau Di Cek")
+      const { dataUnik } = request.params;
+      if(!dataUnik){
+        request.logger.error("Mana Data Unik Yang Mau Di Cek")
+        return Boom.badRequest("Mana Data Unik Yang Mau Di Cek")
       }
       try{
         const { data, error } = await db
-          .from("kuki")
-          .select("cookies")
-          .match({cookies: cookie})
+          .from("unik")
+          .select("data_unik")
+          .match({data_unik: dataUnik})
         if(error){
-          request.logger.error(`Cookie tidak ditemukan: ${error.message}`)
-          return Boom.notFound(`Cookie Tidak Ditemukan: ${error.message}`)
+          request.logger.error(`Data Unik tidak ditemukan: ${error.message}`)
+          return Boom.notFound(`Data Unik Tidak Ditemukan: ${error.message}`)
         }
         return h 
           .response({
             status: "success",
-            message: "Cookie Ditemukan",
+            message: "Data Unik Ditemukan",
           }).code(200)
       }catch(err){
         if(err){
@@ -257,7 +318,7 @@ const routes = [
       },
       validate: {
         params: Joi.object({
-          cookie: Joi.string().guid({ version: ['uuidv4'] }).required(),
+          dataUnik: Joi.string().guid({ version: ['uuidv4'] }).required(),
         })
       }
     }

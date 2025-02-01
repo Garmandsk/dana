@@ -30,6 +30,7 @@ const init = async () => {
   
   await server.register(plugin)
   
+  /* Socket,io */
   const io = new SocketIO.Server(server.listener, {
     cors: {
       origin: "*", // Ganti dengan alamat frontend, jika ada
@@ -46,7 +47,9 @@ let nilai = 0;
       io.sockets.emit("penghitung", nilai)
     });
   });
-
+  /*****/
+  
+  /* Basic Auth 
   const users = {
     Arman: {
       id: 0,
@@ -84,22 +87,41 @@ let nilai = 0;
   };
   
   server.auth.strategy("login", "basic", { validate });
+  /*****/
   
+  /* Cookie */
   server.auth.strategy("session", "cookie", {
     cookie: {
-      name: "session",
+      name: "sessionBE",
       password: "kamalamakamalamakamalamakamalama",
+      path: '/',
+      isSameSite: false,
+      isHttpOnly: false, 
       isSecure: false,
-      ttl: 1000 * 60
+      ttl: 1000 * 60 * 10
     },
-    redirectTo: "/login",
+    redirectTo: false,
     validate: async (request, session) => {
-      if(session.username = "arman", session.password = "1234"){
-        return { isValid: true, credentials: { username: "arman" }};
+      request.logger.info("Validate Session: ", session);
+      try {
+        const { kataSandi } = session; // Perbaikan variabel
+        if (!kataSandi) {
+          request.logger.error("Kata Sandi tidak ada");
+          return { isValid: false };
+        }
+        if (kataSandi === "halo") {
+          request.logger.info("Cek Cookie berhasil");
+          return { isValid: true, credentials: { kataSandi } };
+        }
+        request.logger.error("Super Gagal Cek Cookie");
+        return { isValid: false };
+      } catch (err) {
+        request.logger.error("Strategy Error", err);
+        return { isValid: false };
       }
-      return { isValid: false }
     }
   });
+  /*****/
   
   server.auth.default("session");
   

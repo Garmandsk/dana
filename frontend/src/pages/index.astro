@@ -5,11 +5,13 @@ import Header from '../layouts/Header.astro';
 import InfoTotal from '../components/InfoTotal.astro';
 import InfoLalu from '../components/InfoLalu.astro';
 import TombolAdmin from '../components/TombolAdmin.astro';
+import TombolAdmin2 from '../components/TombolAdmin2.astro';
 import TombolEpik from '../components/TombolEpik.astro';
 import '../styles/index.css';
-import { API_URL_HAPI } from "astro:env/client";
+import { API_BE } from "astro:env/client";
+console.log(API_BE);
 
-const response = await fetch(`${API_URL_HAPI}/statistik`)
+const response = await fetch(`${API_BE}/statistik`)
 const statistik = await response.json();
 if(statistik){
   Astro.response.status = 200;
@@ -22,6 +24,8 @@ total_pendapatan_minggu_lalu,
 total_pendapatan_bulan_lalu } = statistik[0];
 console.log(statistik);
 
+
+console.log(Astro.request);
 ---
   
 <Layout title="Dana Porseni XVII">
@@ -41,7 +45,7 @@ console.log(statistik);
     <button class="mx-auto btn btn-primary" id="tombol">Tambah</button>
   </div>
   
-  <TombolAdmin teks="Admin"/>
+  <TombolAdmin2 teks="Admin"/>
   
 </Layout>
 
@@ -49,10 +53,10 @@ console.log(statistik);
   
   import $ from 'jquery';
   import { io } from "socket.io-client";
-  import { API_URL_HAPI } from "astro:env/client"
-  console.log(API_URL_HAPI);
+  import { API_BE } from "astro:env/client"
+  console.log(API_BE);
   
-  const socket = io(API_URL_HAPI);
+  const socket = io(API_BE);
 
     socket.on("penghitung", (nilai) => {
       $("#nilai").html(nilai);

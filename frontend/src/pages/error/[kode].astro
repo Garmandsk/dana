@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LinkEpik from "../../components/LinkEpik.astro";
+import JudulBesar from "../../components/JudulBesar.astro";
+const { kode } = Astro.params;
+---
+<Layout>
+  <div class="mx-auto" id="container">
+    <JudulBesar judul={`Error: ${kode}`}/>
+    <LinkEpik teks="Kembali"/>
+  </div>
+</Layout>
+
+<style>
+  #container{
+    order: 1px solid purple;
+    display:grid;
+    place-items:center;
+    width:fit-content;
+    height:100vw;
+  }
+</style>

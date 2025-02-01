@@ -1,4 +1,9 @@
 ---
+/*
+if (!Astro.cookies.has('sessionBE')) {
+  return Astro.redirect("/");
+}
+*/
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import Kolom3 from '../layouts/Kolom3.astro';
@@ -8,38 +13,56 @@ import InputBarang from '../components/InputBarang.astro';
 import TombolEpik from '../components/TombolEpik.astro';
 import InfoLalu from '../components/InfoLalu.astro';
 import '../styles/admin.css';
-import { API_URL_HAPI } from "astro:env/client";
+import { API_BE } from "astro:env/client";
+console.log(API_BE);
+console.log("Astro: ", Astro.request);
 
-/*if (Astro.cookies.has('counter')) {
-  const cookie = Astro.cookies.get('counter')
-  const value = cookie?.number()
-  if (value !== undefined && !isNaN(value)) counter = value + 1
+if (!Astro.cookies.has('sessionFE')) {
+  const responseDataUnik = await fetch(`${API_BE}/ambil-unik`, {
+    method: "GET",
+    credentials: 'include',
+  });
+  const resultDataUnik = await responseDataUnik.json()
+      
+      /*
+      {
+        status: 'success',
+        message: 'Kata Sandi Berhasil Didapatkan',
+        data: [ { cookies: 'ba27e473-315d-4a6f-ab2d-fe809fe7acfe' } ]
+      }
+      */
+      
+  console.log(resultDataUnik);
+      
+  const dataUnik = resultDataUnik.data[0].data_unik;
+  //console.log(kataSandiCookie);
+  Astro.cookies.set("sessionFE",
+    dataUnik, {
+      httpOnly: false, // Jika ingin bisa diakses di frontend
+      maxAge: 60 * 60 * 24,
+    });
+}
+
+
+/*
+const responseCekCookieBE = await fetch(`${API_BE}/c-cookie`, {
+  method: "GET",
+  credentials: "include"
+});
+const resultCekCookieBE = await responseCekCookieBE.json();
+console.log(resultCekCookieBE);
 */
 
 
-if (Astro.cookies.has('danaSession')) {
-  //console.log(Astro.cookies);
-  const cookie = Astro.cookies.get('danaSession').value;
-  console.log("Cookie Frontmatter: ", cookie)
-  
-  /*
-  const responseCekCookie = await fetch(`${API_URL_HAPI}/cek-cookie/${cookie}`);
-  const resultCekCookie = await responseCekCookie.json();
-  
-  console.log(cookie, " ", resultCekCookie);
-  if (resultCekCookie.status !== "success"){
-    return Astro.redirect("/");
-  }
-}else{
-  return Astro.redirect("/");
-  */
-}
 
 if (Astro.request.method === "POST") {
+  if((!Astro.cookies.has("sessionFE")) || (!Astro.cookies.has("sessionBE"))){
+    return Astro.redirect("/error/500");
+  }
   const formData = await Astro.request.formData();
 
   // Panggil route untuk membuat riwayat baru
-  const responseRiwayat = await fetch(`${API_URL_HAPI}/tambah-riwayat`, {
+  const responseRiwayat = await fetch(`${API_BE}/tambah-riwayat`, {
     method: "POST",
   });
 
@@ -105,7 +128,7 @@ if (Astro.request.method === "POST") {
           
           console.log(data);
 
-          const responseBarang = await fetch(`${API_URL_HAPI}/tambah-barang`, {
+          const responseBarang = await fetch(`${API_BE}/tambah-barang`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -135,7 +158,7 @@ if (Astro.request.method === "POST") {
     const { totalJenisBarang, totalJumlahBarang, totalHarga } = DatasTotal;
     console.log(DatasTotal);
     
-    const responseTotal = await fetch(`${API_URL_HAPI}/tambah-total`, {
+    const responseTotal = await fetch(`${API_BE}/tambah-total`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -154,7 +177,7 @@ if (Astro.request.method === "POST") {
   }
 }
 
-const response = await fetch(`${API_URL_HAPI}/statistik`)
+const response = await fetch(`${API_BE}/statistik`)
 const statistik = await response.json();
 const { total_pendapatan,
 total_pendapatan_hari_ini,

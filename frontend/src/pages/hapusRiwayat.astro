@@ -1,7 +1,13 @@
 ---
-import { API_URL_HAPI } from "astro:env/client";
+if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+  return Astro.redirect("/");
+}
+import { API_BE } from "astro:env/client";
 
 if (Astro.request.method === "POST") {
+  if((!Astro.cookies.has("sessionFE")) || (!Astro.cookies.has("sessionBE"))){
+    return Astro.redirect("/error/500");
+  }
   const formData = await Astro.request.formData();
   const idRiwayat = formData.get("idRiwayat");  // Ambil idRiwayat dari formData
   console.log(idRiwayat)
@@ -10,7 +16,7 @@ if (Astro.request.method === "POST") {
     return Astro.redirect("/gagal");
   }
 
-  const responseHapusRiwayat = await fetch(`${API_URL_HAPI}/riwayat-hapus/${idRiwayat}`, {
+  const responseHapusRiwayat = await fetch(`${API_BE}/riwayat-hapus/${idRiwayat}`, {
     method: "DELETE",
   });
 

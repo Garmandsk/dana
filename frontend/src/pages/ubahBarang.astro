@@ -1,13 +1,20 @@
 ---
-import { API_URL_HAPI } from "astro:env/client";
+if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+  return Astro.redirect("/");
+}
+
+import { API_BE } from "astro:env/client";
 
 if (Astro.request.method === "POST") {
+  if((!Astro.cookies.has("sessionFE")) || (!Astro.cookies.has("sessionBE"))){
+    return Astro.redirect("/error/500");
+  }
   const formData = await Astro.request.formData();
   const idRiwayat = formData.get("idRiwayat");
   const idBarang = formData.get("idBarang");
   const hargaBarang = formData.get("hargaBarang");
   const jumlahBarang = formData.get("jumlahBarang");
-  const responseUbahBarang = await fetch(`${API_URL_HAPI}/barang-ubah/${idBarang}`, {
+  const responseUbahBarang = await fetch(`${API_BE}/barang-ubah/${idBarang}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

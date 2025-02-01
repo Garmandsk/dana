@@ -1,4 +1,8 @@
 ---
+if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+  return Astro.redirect("/");
+}
+
 import Layout from '../../layouts/Layout.astro';
 import HeaderAdmin from '../../layouts/HeaderAdmin.astro';
 import Kolom2 from '../../layouts/Kolom2.astro';
@@ -8,18 +12,18 @@ import Kotak from '../../components/Kotak.astro';
 import InfoLalu from '../../components/InfoLalu.astro';
 import TombolUbah from '../../components/TombolUbah.astro';
 import TombolHapus from '../../components/TombolHapus.astro';
-import { API_URL_HAPI } from "astro:env/client";
+import { API_BE } from "astro:env/client";
 
 const { id = 0 } = Astro.params;
 
-const responseRiwayatBarang = await fetch (`${API_URL_HAPI}/riwayat-barang/${id}`);
+const responseRiwayatBarang = await fetch (`${API_BE}/riwayat-barang/${id}`);
 const resultRiwayatBarang = await responseRiwayatBarang.json();
 //console.log(resultRiwayatBarang);
 
 const Datas = resultRiwayatBarang.data;
 //console.log(Datas);
 
-const responseTotal = await fetch(`${API_URL_HAPI}/total/${id}`,{
+const responseTotal = await fetch(`${API_BE}/total/${id}`,{
   method: "GET",
 })
 const resultTotal = await responseTotal.json();

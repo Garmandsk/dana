@@ -1,4 +1,7 @@
 ---
+if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+  return Astro.redirect("/");
+}
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import JudulKecil from '../components/JudulKecil.astro';
@@ -7,9 +10,9 @@ import TombolHapus from '../components/TombolHapus.astro';
 import LinkUbah from '../components/LinkUbah.astro';
 import Modal from '../components/Modal.astro';
 import { Picture, Image } from 'astro:assets';
-import { API_URL_HAPI } from "astro:env/client";
+import { API_BE } from "astro:env/client";
 
-const responseRiwayat = await fetch(`${API_URL_HAPI}/riwayat`);
+const responseRiwayat = await fetch(`${API_BE}/riwayat`);
 const resultRiwayat = await responseRiwayat.json();
 if(resultRiwayat.status != "success"){
   console.error("Error, Riwayat Tidak Tersedia");
@@ -18,7 +21,7 @@ if(resultRiwayat.status != "success"){
 const Datas = resultRiwayat.data;
 
 const fetchBarang = async (id) => {
-  const response = await fetch(`${API_URL_HAPI}/riwayat-barang/${id}`);
+  const response = await fetch(`${API_BE}/riwayat-barang/${id}`);
 
   if (!response.ok) {
     throw new Error('Gagal mengambil data barang');
@@ -89,7 +92,7 @@ const riwayatBarangData = await Promise.all(
   
         <div class="container-tombol">
           <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${idRiwayat}` width="15vw"/>
-          <TombolHapus judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat} formPath="/hapusRiwayat"/>
+          <TombolHapus formPath="/hapusRiwayat" judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat}/>
         </div>
       </div>
       <JudulKecil tambahan="my-3 text-white"/>
@@ -112,7 +115,7 @@ const riwayatBarangData = await Promise.all(
       }
       
       // Lakukan request ke API
-      fetch(`${API_URL_HAPI}/riwayat-barang?input=${encodeURIComponent(inputValue)}`)
+      fetch(`${API_BE}/riwayat-barang?input=${encodeURIComponent(inputValue)}`)
         .then(response => response.json())
         .then(resultCariRiwayat => {
           const Datas = resultCariRiwayat.data || [];

@@ -1,11 +1,17 @@
 ---
-import { API_URL_HAPI } from "astro:env/client";
+if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+  return Astro.redirect("/");
+}
+import { API_BE } from "astro:env/client";
 
 if (Astro.request.method === "POST") {
+  if((!Astro.cookies.has("sessionFE")) || (!Astro.cookies.has("sessionBE"))){
+    return Astro.redirect("/error/500");
+  }
   const formData = await Astro.request.formData();
   const idRiwayat = formData.get("idRiwayat");
   const idBarang = formData.get("idBarang");
-  const responseHapusBarang = await fetch(`${API_URL_HAPI}/barang-hapus/${idBarang}`, {
+  const responseHapusBarang = await fetch(`${API_BE}/barang-hapus/${idBarang}`, {
     method: "DELETE",
   });
   

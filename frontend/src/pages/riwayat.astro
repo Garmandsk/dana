@@ -1,7 +1,49 @@
 ---
-if ((!Astro.cookies.has('sessionFE')) || (!Astro.cookies.has('sessionBE'))) {
+import { API_BE, KATA_SANDI_ASLI, PASSWORD, PLAIN_TEXT, KEY } from "astro:env/client";
+import { unsealCookie } from "./js/functions.js";
+import { decrypt, fu } from "./js/crypt.js";
+//console.log(API_BE);
+var pass;
+
+if (Astro.cookies.has('sessionBE')) {
+  const cookieBE = Astro.cookies.get("sessionBE").value;
+  const password = PASSWORD;
+  
+  const dataCookieBE = await unsealCookie(cookieBE, password);
+  //console.log("Data Cookie BE:", dataCookieBE);-->
+  const { KATA_SANDI } = dataCookieBE;
+  if(KATA_SANDI !== KATA_SANDI_ASLI){
+    // cookie tidak sesuai
+    pass = false;
+    return Astro.redirect("/");
+  }
+  pass = true;
+} else {
+  // cookie tidak ada
+  pass = false;
   return Astro.redirect("/");
 }
+
+if(Astro.cookies.has("sessionFE")){
+  const cookie = Astro.cookies.get("sessionFE");
+  const enkripsi = cookie.json();
+  const keyBase64 = KEY;
+  const keyBytes = fu.decode64(keyBase64);
+  const dekripsi = decrypt(enkripsi.dataEnkripsi, enkripsi.iv, enkripsi.tag, keyBytes)
+  //console.log("Dekripsi: ", dekripsi);
+  //console.log("PLAIN_TEXT: ", PLAIN_TEXT);
+  if(dekripsi !== PLAIN_TEXT){
+    // cookie tidak sesuai
+    pass = false;
+    return Astro.redirect("/")
+  }
+  pass = true;
+}else{
+  // cookie tidak ada
+  pass = false;
+  return Astro.redirect("/")
+}
+
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
 import JudulKecil from '../components/JudulKecil.astro';
@@ -10,7 +52,6 @@ import TombolHapus from '../components/TombolHapus.astro';
 import LinkUbah from '../components/LinkUbah.astro';
 import Modal from '../components/Modal.astro';
 import { Picture, Image } from 'astro:assets';
-import { API_BE } from "astro:env/client";
 
 const responseRiwayat = await fetch(`${API_BE}/riwayat`);
 const resultRiwayat = await responseRiwayat.json();

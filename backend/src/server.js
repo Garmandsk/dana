@@ -20,7 +20,7 @@ const init = async () => {
     },
     */
     routes: {
-      cors: true, // Izinkan CORS
+      cors: true,
       payload: {
         parse: true,
         allow: 'application/json',
@@ -104,14 +104,15 @@ let nilai = 0;
     validate: async (request, session) => {
       request.logger.info("Validate Session: ", session);
       try {
-        const { kataSandi } = session; // Perbaikan variabel
-        if (!kataSandi) {
+        const { KATA_SANDI } = session; // Perbaikan variabel
+        console.log("KATA_SANDI: ", KATA_SANDI);
+        if (!KATA_SANDI) {
           request.logger.error("Kata Sandi tidak ada");
           return { isValid: false };
         }
-        if (kataSandi === "halo") {
+        if (KATA_SANDI === "halo") {
           request.logger.info("Cek Cookie berhasil");
-          return { isValid: true, credentials: { kataSandi } };
+          return { isValid: true, credentials: { KATA_SANDI } };
         }
         request.logger.error("Super Gagal Cek Cookie");
         return { isValid: false };

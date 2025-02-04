@@ -206,8 +206,8 @@ const routes = [
       }
       request.logger.warn(`Data: ${data}, Auth: ${request.auth}`);
       request.cookieAuth.set(data)
-      request.auth.isAuthenticated = true;
-      request.auth.isAuthorized = true;
+      console.log("Request: ", request);
+      console.log("KATA_SANDI: ", request.auth.credentials);
       return h.redirect("http://localhost:4321/admin")
     },
     options: {
@@ -225,14 +225,14 @@ const routes = [
     method: "GET",
     path: "/c-cookie",
     handler: (request, h) => {
-      const { kataSandi } = request.auth.credentials;
-      console.log(kataSandi);
-      request.logger.warn(request.auth);
-      return kataSandi;
+      // request.logger.warn(request);
+      const { KATA_SANDI } = request.auth.credentials;
+      console.log(KATA_SANDI);
+      return KATA_SANDI;
     },
     options: {
       auth: {
-        mode: "try"
+        mode: "required"
       }
     }
   },

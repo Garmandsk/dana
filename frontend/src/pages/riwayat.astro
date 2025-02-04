@@ -46,6 +46,7 @@ if(Astro.cookies.has("sessionFE")){
 
 import Layout from '../layouts/Layout.astro';
 import HeaderAdmin from '../layouts/HeaderAdmin.astro';
+import Kolom3 from '../layouts/Kolom3.astro';
 import JudulKecil from '../components/JudulKecil.astro';
 import TombolEpik from '../components/TombolEpik.astro';
 import TombolHapus from '../components/TombolHapus.astro';
@@ -72,17 +73,36 @@ const fetchBarang = async (id) => {
   return result.data || [];
 };
 
+const fetchTotal = async (id) => {
+  const responseTotal = await fetch(`${API_BE}/total/${id}`)
+  if (!responseTotal.ok) {
+    throw new Error('Gagal mengambil data total');
+  }
+  const resultTotal = await responseTotal.json();
+  console.log(resultTotal);
+  return resultTotal.data || [];
+}
+
 // Ambil data barang untuk setiap riwayat
 const riwayatBarangData = await Promise.all(
   Datas.map(async (data) => {
     const barang = await fetchBarang(data.id);
+    const total = await fetchTotal(data.id);
     return {
       idRiwayat: data.id,
       barang,
+      total,
     };
   }));
 
-
+const formatRupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number);
+};
+                
 ---
 
 {/*
@@ -107,20 +127,20 @@ const riwayatBarangData = await Promise.all(
 
 <Layout title="Riwayat">
   <HeaderAdmin judul="Riwayat" tujuanLink="/admin" />
-  
+
   <form action="" method="POST">
     <input class="mt-5" id="input" name="input" 
            type="text" placeholder="Cari">
   </form>
   <JudulKecil tambahan="my-3 text-white"/>
-  
+
   <img class="" id="loader" src="images/roketLoader.gif">
-  
+
   <div id="container">
-    {riwayatBarangData.map(({ idRiwayat, barang }) => (
+    {riwayatBarangData.map(({ idRiwayat, barang, total }) => (
       <div class="container-riwayat" key={idRiwayat}>
-        <h2>#{idRiwayat}</h2>
-  
+        <h2 class="my-auto">#{idRiwayat}</h2>
+
         <div class="container-barang">
           {barang.length > 0 ? (
             barang.map((item) => (
@@ -130,11 +150,30 @@ const riwayatBarangData = await Promise.all(
             <p>Kosong</p> 
           )}
         </div>
-  
+
         <div class="container-tombol">
           <LinkUbah teks="Ubah" tujuanLink=`/ubahRiwayat/${idRiwayat}` width="15vw"/>
           <TombolHapus formPath="/hapusRiwayat" judul="Hapus Riwayat ?" teks=`Hapus Riwayat #${idRiwayat}` width="15vw" target={idRiwayat} idRiwayat={idRiwayat}/>
         </div>
+      </div>
+      
+      <div class="container-footer text-light">
+      {total && total.length > 0 ? (
+          <div class="container-total mt-3">
+            {total.map((data) => (
+                <h3 class="my-auto">{formatRupiah(data.total_harga)}</h3>
+                <h3 class="my-auto">{data.total_jenis_barang}</h3>
+                <h3 class="my-auto">{data.total_jumlah_barang}</h3>
+            ))}
+          </div>
+          <div class="container-deskripsi">
+            <p>Total Harga</p>
+            <p>Total Jenis Barang</p>
+            <p>Total Jumlah Barang</p>
+          </div>
+      ) : (
+        <h3 class=""></h3>
+      )}
       </div>
       <JudulKecil tambahan="my-3 text-white"/>
     ))}
@@ -301,6 +340,10 @@ const riwayatBarangData = await Promise.all(
     padding: 8px 16px;
   }
   
+  h3{
+    order:1px solid purple;
+  }
+  
   .container-barang{
     border:5px solid purple;
     border-radius:10px;
@@ -324,6 +367,30 @@ const riwayatBarangData = await Promise.all(
   img {
     display:none;
     width:100%;
+  }
+  
+  .container-footer h3{
+    order:5px solid purple;
+    width:fit-content;
+    adding: 2px 4px;
+  }
+  
+  .container-total{
+    border: 1px solid purple;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+  }
+  
+  .container-deskripsi{
+    border: 1px solid purple;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+  }
+  
+  .container-deskripsi p {
+    font-size:8px;
   }
 
 </style>

@@ -429,7 +429,7 @@ const routes = [
             error: error.message,
           }).code(500); // Menambahkan kode 500 untuk error internal
         }
-  
+        console.log(data)
         return h.response({
           status: "success",
           message: "Data Total Didapatkan",
@@ -725,14 +725,20 @@ const routes = [
       }
 
       try {
-        const { data, error } = await db.rpc("get_barang_by_riwayat", { riwayat_id: id });
-
+        const { data, error } = await db
+          .rpc("get_barang_by_riwayat", { riwayat_id: id });
+          /*
+          .from("barang")
+          .select()
+          .match({id_riwayat: id})
+          .order("created_at", { ascending: false })
+          */
         if (error) {
-          request.logger.error("Error fetching data:", error.message);
+          request.logger.error(`Error fetching data: ${error.message}`);
           return Boom.badRequest(error.message);
         }
 
-        // request.logger.info("Data berhasil diambil:", data);
+        request.logger.info(`Data berhasil diambil: ${data}`);
 
         // Kembalikan data ke client
         return h.response({
@@ -741,8 +747,8 @@ const routes = [
         }).code(200);
 
       } catch (err) {
-        request.logger.error("Error handler:", err.message);
-        return Boom.internal("Terjadi kesalahan pada server.");
+        request.logger.error(`Error handler: ${err.message}`);
+        return Boom.internal(`Terjadi kesalahan pada server: ${err.message}`);
       }
     },
     options: {
@@ -768,7 +774,10 @@ const routes = [
       }
   
       try {
-        const { error } = await db.from('riwayat').delete().eq('id', idRiwayat);
+        const { error } = await db
+          .from('riwayat')
+          .delete()
+          .eq('id', idRiwayat);
         if (error) {
           request.logger.error("Error Delete Riwayat: ", error.message);
           return h.response({

@@ -63,12 +63,10 @@ const resultRiwayatBarang = await responseRiwayatBarang.json();
 const Datas = resultRiwayatBarang.data;
 //console.log(Datas);
 
-const responseTotal = await fetch(`${API_BE}/total/${id}`,{
-  method: "GET",
-})
+const responseTotal = await fetch(`${API_BE}/total/${id}`)
 const resultTotal = await responseTotal.json();
 if(resultTotal.data[0] === undefined){
-  return Astro.redirect("/error");
+  return Astro.redirect("/error/404");
 }
 console.log(resultTotal);
 const { total_jenis_barang, total_jumlah_barang, total_harga } = resultTotal.data[0];

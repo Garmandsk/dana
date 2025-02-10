@@ -1,0 +1,39 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "build": "NODE_ENV=production node src/server.js",
+    "dev": "nodemon -e hbs,js src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@hapi/hapi": "^21.3.12",
+    "@hapi/inert": "^7.1.0",
+    "@hapi/vision": "^7.0.3",
+    "@supabase/supabase-js": "^2.47.10",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "hapi-dev-errors": "^4.0.0",
+    "hapi-geo-locate": "^4.1.1",
+    "hapi-pino": "^12.1.0",
+    "joi": "^17.13.3",
+    "nanoid": "^3.3.8",
+    "pino-pretty": "^13.0.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@hapi/basic": "^7.0.2",
+    "@hapi/cookie": "^12.0.1",
+    "@logtail/pino": "^0.5.2",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "handlebars": "^4.7.8",
+    "nodemon": "^3.1.9"
+  }
+}

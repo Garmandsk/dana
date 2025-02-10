@@ -6,12 +6,12 @@ const routes = require("./routes");
 const plugin = require("./plugin")
 const db = require("./db.js");
 
-const { PORT, HOST } = process.env;
+const { PORT } = process.env;
 
 const init = async () => {
   const server = Hapi.server({
     port: PORT,
-    host: HOST,
+    host: process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost",
     // tanpa cors kita tidak dapat menyimpan data dari frontend yang deploy
     /* routes: {
       cors: {
@@ -49,46 +49,6 @@ let nilai = 0;
   });
   /*****/
   
-  /* Basic Auth 
-  const users = {
-    Arman: {
-      id: 0,
-      username: "Arman",
-      password: "123"
-    },
-    Gerti: {
-      id: 1,
-      username: "Gerti",
-      password: "098"
-    }
-  };
-  
-  const validate = async (request, username, password, h) => {
-    // Cari pengguna berdasarkan username
-    const user = users[username];
-  
-    // Jika pengguna tidak ditemukan
-    if (!user) {
-      console.log(`Pengguna tidak ditemukan, Username: ${users[username]}`);
-      return { isValid: false, pesan: "Pengguna tidak ditemukan" };
-    }
-  
-    // Cek apakah password cocok
-    if (user.password === password) {
-      return { 
-        isValid: true, 
-        credentials: { id: user.id, username: user.username } 
-      };
-    }
-  
-    // Jika password salah
-    console.log("Password Salah");
-    return { isValid: false, pesan: "Password salah" };
-  };
-  
-  server.auth.strategy("login", "basic", { validate });
-  /*****/
-  
   /* Cookie */
   server.auth.strategy("session", "cookie", {
     cookie: {
@@ -96,9 +56,9 @@ let nilai = 0;
       password: "kamalamakamalamakamalamakamalama",
       path: '/',
       isSameSite: false,
-      isHttpOnly: false, 
+      isHttpOnly: true, 
       isSecure: false,
-      ttl: 1000 * 60 * 10
+      ttl: 1000 * 60 * 60 * 2
     },
     redirectTo: false,
     validate: async (request, session) => {
@@ -125,15 +85,6 @@ let nilai = 0;
   /*****/
   
   server.auth.default("session");
-  
-  server.views({
-    engines: {
-      hbs: require('handlebars')
-    },
-    /* Apapun yang ada di direktori public dapat menjadi file global untuk semua routes */
-    path: path.join(__dirname, 'public'),
-    layout: "layout"
-  })
 
   // Definisi route GET /
   server.route(routes);

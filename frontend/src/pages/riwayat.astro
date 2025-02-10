@@ -79,7 +79,7 @@ const fetchTotal = async (id) => {
     throw new Error('Gagal mengambil data total');
   }
   const resultTotal = await responseTotal.json();
-  console.log(resultTotal);
+  //console.log(resultTotal);
   return resultTotal.data || [];
 }
 
@@ -183,12 +183,13 @@ const formatRupiah = (number) => {
 
 <script>
   import $ from 'jquery';
-  
+  import { API_BE } from "astro:env/client";
   $(document).ready(() => {
     $("#input").on("keyup", function () {
       const inputValue = $(this).val();
+      // $("#container").hide();
       $("#loader").show(); // Tampilkan loader saat pencarian
-      
+      console.log(inputValue);
       // Jika input kosong, reload halaman
       if (inputValue === "") {
         location.reload();
@@ -201,6 +202,7 @@ const formatRupiah = (number) => {
           const Datas = resultCariRiwayat.data || [];
           const container = $("#container");
           container.empty(); // Kosongkan container sebelum menambahkan data baru
+          
 
           // Jika tidak ada data
           if (Datas.length === 0) {

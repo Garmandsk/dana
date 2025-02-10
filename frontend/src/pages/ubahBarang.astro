@@ -57,6 +57,7 @@ if (Astro.request.method === "POST") {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "auth": KATA_SANDI_ASLI,
     },
     body: JSON.stringify({hargaBarang, jumlahBarang})
   });

@@ -53,6 +53,9 @@ if (Astro.request.method === "POST") {
   const idBarang = formData.get("idBarang");
   const responseHapusBarang = await fetch(`${API_BE}/barang-hapus/${idBarang}`, {
     method: "DELETE",
+    headers: {
+      "auth": KATA_SANDI_ASLI,
+    },
   });
   
   const resultHapusBarang = await responseHapusBarang.json();

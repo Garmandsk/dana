@@ -58,6 +58,9 @@ if (Astro.request.method === "POST") {
 
   const responseHapusRiwayat = await fetch(`${API_BE}/riwayat-hapus/${idRiwayat}`, {
     method: "DELETE",
+    headers: {
+      "auth": KATA_SANDI_ASLI,
+    },
   });
 
   const resultHapusRiwayat = await responseHapusRiwayat.json();

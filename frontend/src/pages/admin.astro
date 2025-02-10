@@ -34,8 +34,9 @@ if (pass === true && !Astro.cookies.has('sessionFE')) {
   //console.log("Data Enkripsi: ", enkripsi);
   Astro.cookies.set("sessionFE",
     enkripsi, {
-      httpOnly: false, // Jika ingin bisa diakses di frontend
-      maxAge: 60 * 60 * 24,
+      httpOnly: true, // Jika ingin bisa diakses di frontend
+      maxAge: 60 * 60 * 2,
+      sameSite: "strict"
     });
   pass = true;
 }
@@ -59,6 +60,9 @@ if (Astro.request.method === "POST") {
   // Panggil route untuk membuat riwayat baru
   const responseRiwayat = await fetch(`${API_BE}/tambah-riwayat`, {
     method: "POST",
+    headers: {
+      "auth": KATA_SANDI_ASLI,
+    },
   });
 
   const result = await responseRiwayat.json();
@@ -127,6 +131,7 @@ if (Astro.request.method === "POST") {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "auth": KATA_SANDI_ASLI,
             },
             body: JSON.stringify(data),
           });
@@ -156,7 +161,8 @@ if (Astro.request.method === "POST") {
     const responseTotal = await fetch(`${API_BE}/tambah-total`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "auth": KATA_SANDI_ASLI,
       },
       body: JSON.stringify(DatasTotal)
     })
